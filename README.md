@@ -6,19 +6,12 @@ Repositório oficial contendo os **scripts de coleta de dados**, **datasets brut
 
 ---
 
-## ⚡ Abrir e Rodar no Google Colab com 1 Clique
-
-Clique no botão abaixo para abrir o notebook interativo diretamente no **Google Colab** (não exige instalação de nada na sua máquina):
-
-👉 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
-
----
-
 ## 📂 Estrutura do Repositório
 
 ```text
 TCC_DEFI/
 ├── notebook_tcc_lido_defi.ipynb  # Notebook interativo para Google Colab / Jupyter
+├── requirements.txt              # Arquivo de dependências Python para venv / pip
 └── scripts_e_dados/
     ├── scripts/                  # Scripts em Python para coleta, análise e gráficos
     │   ├── 01_coleta_precos.py    # Coleta de preços ETH/USD e razão stETH/ETH (DefiLlama)
@@ -60,28 +53,93 @@ TCC_DEFI/
 
 ---
 
-## 📖 Tutorial Passo a Passo: Como Rodar no Google Colab ou Jupyter
+## 📖 Tutorial Passo a Passo: Como Rodar no Seu Ambiente Virtual (`venv`)
 
-### Opção A: Executar no Google Colab (Na Nuvem, Sem Instalar Nada)
-1. Clique no selo azul **[Open In Colab]** no topo desta página.
-2. No menu superior do Colab, clique em **Ambiente de execução > Executar tudo** (ou pressione `Ctrl + F9`).
-3. O Colab irá baixar os pacotes necessários, consultar as APIs on-chain e exibir todos os gráficos e métricas na tela.
+Este é o método tradicional para executar o projeto no seu computador utilizando o ambiente virtual Python (`venv`) e o gerenciador `pip`.
 
----
+### 💻 1. No Windows (PowerShell)
 
-### Opção B: Executar Localmente via Jupyter Notebook ou VS Code
-1. Clone este repositório:
-   ```bash
-   git clone https://github.com/Maths0007/TCC_DEFI.git
-   cd TCC_DEFI
+1. **Abra o PowerShell** na pasta do projeto e crie o ambiente virtual:
+   ```powershell
+   python -m venv .venv
    ```
-2. Abra o arquivo `notebook_tcc_lido_defi.ipynb` no VS Code, Jupyter Lab ou Jupyter Notebook.
-3. Clique em **Run All** (Executar Tudo).
+
+2. **Ative o ambiente virtual:**
+   ```powershell
+   .\.venv\Scripts\Activate.ps1
+   ```
+   *(Caso apareça aviso de permissão de execução de scripts, rode antes: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
+
+3. **Instale as dependências:**
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+4. **Execute a pipeline completa (Coleta + Métricas + Gráficos 300 DPI):**
+   ```powershell
+   python scripts_e_dados/scripts/coletar_todos.py
+   ```
 
 ---
 
-### Opção C: Executar via Terminal com `uv`
-Para rodar a pipeline automatizada completa direto no terminal de comando:
+### 🐧 / 🍎 2. No Linux ou macOS (Terminal)
+
+1. **Abra o Terminal** na pasta do projeto e crie o ambiente virtual:
+   ```bash
+   python3 -m venv .venv
+   ```
+
+2. **Ative o ambiente virtual:**
+   ```bash
+   source .venv/bin/activate
+   ```
+
+3. **Instale as dependências:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Execute a pipeline completa:**
+   ```bash
+   python scripts_e_dados/scripts/coletar_todos.py
+   ```
+
+---
+
+## ⚡ Outras Formas de Execução
+
+### Opção B: Executar no Google Colab (Na Nuvem, Sem Instalar Nada)
+Clique no botão abaixo para rodar o notebook interativo na nuvem do Google Colab com 1 clique:
+
+👉 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
+
+---
+
+### Opção C: Executar com `uv` (Execução Direta sem venv Manual)
+Se preferir usar o gerenciador `uv`:
 ```bash
 uv run scripts_e_dados/scripts/coletar_todos.py
+```
+
+---
+
+## ⚙️ Executando Scripts Individuais no Ambiente Virtual
+
+Com o ambiente virtual ativado (`.venv`), você também pode executar cada script isoladamente:
+
+```bash
+# 1. Coletar preços de ETH/USD e razões stETH/ETH (Depeg)
+python scripts_e_dados/scripts/01_coleta_precos.py
+
+# 2. Coletar histórico de APR/APY do Lido e Solo Staking
+python scripts_e_dados/scripts/02_coleta_apr.py
+
+# 3. Coletar TVL, Staking Ratio e Market Share dos LSDs/LRTs
+python scripts_e_dados/scripts/03_coleta_tvl_lsd.py
+
+# 4. Calcular estatísticas descritivas, testes t/F e HHI
+python scripts_e_dados/scripts/04_gerar_metricas.py
+
+# 5. Gerar os 8 gráficos acadêmicos em alta resolução (300 DPI)
+python scripts_e_dados/scripts/05_gerar_graficos.py
 ```
