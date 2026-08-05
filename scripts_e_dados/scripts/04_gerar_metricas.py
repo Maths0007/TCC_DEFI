@@ -12,6 +12,7 @@ Processa os dados coletados da pasta scripts_e_dados/Dados e gera:
 1. Tabelas estatísticas em CSV (scripts_e_dados/Metricas/)
 2. Resumo em JSON (scripts_e_dados/Metricas/resumo_metricas.json)
 3. Relatório formatado em Markdown (scripts_e_dados/Metricas/relatorio_metricas_tcc.md)
+4. Tabela consolidada de métricas em CSV (scripts_e_dados/Metricas/tabela_metricas_consolidadas_tcc.csv)
 """
 import os
 import json
@@ -23,7 +24,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DADOS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Dados")
 METRICAS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Metricas")
 
-# Recorte Temporal de Análise Solicitado (Maio/2022 a Abril/2026)
 DATA_INICIO = pd.to_datetime("2022-05-01")
 DATA_FIM = pd.to_datetime("2026-04-30")
 
@@ -69,8 +69,8 @@ def calcular_metricas_depeg(df_depeg):
         "depeg_medio_pct": float(depeg.mean()),
         "depeg_mediana_pct": float(depeg.median()),
         "depeg_desvio_padrao_pct": float(depeg.std()),
-        "depeg_minimo_pct": float(depeg.min()),  # Pior desconto
-        "depeg_maximo_pct": float(depeg.max()),  # Maior prêmio
+        "depeg_minimo_pct": float(depeg.min()),
+        "depeg_maximo_pct": float(depeg.max()),
         "depeg_assimetria_skewness": float(stats.skew(depeg)),
         "depeg_curtose_kurtosis": float(stats.kurtosis(depeg)),
         "percentil_1_pct": float(np.percentile(depeg, 1)),
@@ -328,6 +328,53 @@ def gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, con
     return relatorio
 
 
+def gerar_tabela_metricas_consolidadas_csv(metricas_depeg, pre_pos, metricas_apr, concentracao):
+    """Gera um CSV consolidado único (Chave-Valor) perfeito para importação direta no Excel/Word."""
+    linhas = []
+
+    # Seção 1: Depeg Geral
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Período Analisado", "valor": f"{metricas_depeg['data_inicio']} a {metricas_depeg['data_fim']}"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Total de Observações (Dias)", "valor": metricas_depeg['total_observacoes_dias']})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Razão Média (stETH/ETH)", "valor": f"{metricas_depeg['preco_ratio_medio']:.6f}"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Depeg Médio (%)", "valor": f"{metricas_depeg['depeg_medio_pct']:.4f}%"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Depeg Mediano (%)", "valor": f"{metricas_depeg['depeg_mediana_pct']:.4f}%"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Desvio Padrão do Depeg (%)", "valor": f"{metricas_depeg['depeg_desvio_padrao_pct']:.4f}%"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Maior Desconto / Depeg Mínimo (%)", "valor": f"{metricas_depeg['depeg_minimo_pct']:.4f}%"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Maior Prêmio / Depeg Máximo (%)", "valor": f"{metricas_depeg['depeg_maximo_pct']:.4f}%"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Assimetria (Skewness)", "valor": f"{metricas_depeg['depeg_assimetria_skewness']:.4f}"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Curtose (Kurtosis)", "valor": f"{metricas_depeg['depeg_curtose_kurtosis']:.4f}"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Autocorrelação AR(1)", "valor": f"{metricas_depeg['autocorrelacao_ar1']:.4f}"})
+    linhas.append({"categoria": "Depeg stETH/ETH", "metrica": "Autocorrelação AR(5)", "valor": f"{metricas_depeg['autocorrelacao_ar5']:.4f}"})
+
+    # Seção 2: Pré vs Pós Shanghai
+    p_pre = pre_pos["pre_shanghai"]
+    p_pos = pre_pos["pos_shanghai"]
+    t_test = pre_pos["teste_hipotese"]
+
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Pré-Shanghai: Depeg Médio (%)", "valor": f"{p_pre['depeg_medio_pct']:.4f}%"})
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Pré-Shanghai: Desvio Padrão (%)", "valor": f"{p_pre['desvio_padrao_pct']:.4f}%"})
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Pós-Shanghai: Depeg Médio (%)", "valor": f"{p_pos['depeg_medio_pct']:.4f}%"})
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Pós-Shanghai: Desvio Padrão (%)", "valor": f"{p_pos['desvio_padrao_pct']:.4f}%"})
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Redução da Volatilidade do Depeg (%)", "valor": f"{t_test['reducao_desvio_padrao_pct']:.1f}%"})
+    linhas.append({"categoria": "Efeito Shanghai (12/04/23)", "metrica": "Teste t (p-value)", "valor": f"{t_test['p_value_diferenca_medias']:.4e}"})
+
+    # Seção 3: Rendimento APR
+    linhas.append({"categoria": "Rendimento & Spread", "metrica": "Lido stETH APY Médio (%)", "valor": f"{metricas_apr.get('apr_lido_medio_pct', 0):.2f}%"})
+    linhas.append({"categoria": "Rendimento & Spread", "metrica": "Solo Staking APR Estimado (%)", "valor": f"{metricas_apr.get('apr_direto_medio_pct', 0):.2f}%"})
+    linhas.append({"categoria": "Rendimento & Spread", "metrica": "Spread da Taxa Lido DAO (10%)", "valor": f"{metricas_apr.get('spread_taxa_lido_dao_medio_pct', 0):.3f}%"})
+
+    # Seção 4: Concentração
+    linhas.append({"categoria": "Concentração & Governança", "metrica": "Market Share Histórico Médio Lido (%)", "valor": f"{concentracao.get('lido_share_historico_medio_pct', 0):.2f}%"})
+    linhas.append({"categoria": "Concentração & Governança", "metrica": "Índice HHI Histórico Médio", "valor": f"{concentracao.get('hhi_historico_medio', 0):.1f}"})
+
+    if "correlacao_share_vs_depeg" in concentracao:
+        c = concentracao["correlacao_share_vs_depeg"]
+        linhas.append({"categoria": "Concentração & Governança", "metrica": "Correlação Pearson (Share Lido vs Depeg)", "valor": f"{c['pearson_r']:.4f}"})
+        linhas.append({"categoria": "Concentração & Governança", "metrica": "Correlação Spearman (Share Lido vs Depeg)", "valor": f"{c['spearman_r']:.4f}"})
+
+    return pd.DataFrame(linhas)
+
+
 def main():
     print("=" * 75)
     print("SCRIPT 04 -- Cálculo de Métricas (Recorte: Maio/2022 a Abril/2026)")
@@ -357,7 +404,7 @@ def main():
         dados.get("market_share_hist"), dados.get("market_share_snap"), dados.get("depeg")
     )
 
-    # Salvar arquivos CSV
+    # Salvar arquivos CSV por tabela
     pd.DataFrame([metricas_depeg]).to_csv(os.path.join(METRICAS_DIR, "tabela_depeg_descritiva.csv"), index=False)
     pd.DataFrame([
         {**pre_pos["pre_shanghai"], "categoria": "pre_shanghai"},
@@ -365,6 +412,12 @@ def main():
     ]).to_csv(os.path.join(METRICAS_DIR, "tabela_pre_pos_shanghai.csv"), index=False)
     pd.DataFrame(eventos).to_csv(os.path.join(METRICAS_DIR, "tabela_eventos_estresse.csv"), index=False)
     pd.DataFrame([metricas_apr]).to_csv(os.path.join(METRICAS_DIR, "tabela_rendimento_apr.csv"), index=False)
+
+    # Salvar CSV consolidado master
+    df_consolidado = gerar_tabela_metricas_consolidadas_csv(metricas_depeg, pre_pos, metricas_apr, concentracao)
+    caminho_csv_master = os.path.join(METRICAS_DIR, "tabela_metricas_consolidadas_tcc.csv")
+    df_consolidado.to_csv(caminho_csv_master, index=False, encoding="utf-8-sig")
+    print(f"\n  [OK] Salvo CSV Consolidado Master: {caminho_csv_master}")
 
     # Salvar JSON
     resultado_completo = {
@@ -379,7 +432,7 @@ def main():
     caminho_json = os.path.join(METRICAS_DIR, "resumo_metricas.json")
     with open(caminho_json, "w", encoding="utf-8") as f:
         json.dump(resultado_completo, f, indent=2, ensure_ascii=False)
-    print(f"\n  [OK] Salvo JSON consolidado: {caminho_json}")
+    print(f"  [OK] Salvo JSON consolidado: {caminho_json}")
 
     # Salvar Markdown
     md_texto = gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, concentracao)
