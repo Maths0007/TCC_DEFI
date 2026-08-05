@@ -1,15 +1,24 @@
-# Environments
+# Environments & Virtual Envs
 .venv/
 env/
 venv/
 __pycache__/
 *.pyc
 
+# Exclude TCC text documents, slides, and PDF papers
+texto_tcc/
+artigos_baixados/
+artigos_descartados/
+artigos_manter/
+artigos_selecionados_tcc/
+apresentacao/
+*.pptx
+*.docx
+*.pdf
+gerar_pptx.py
+
 # Temporary Office / Windows files
-~$*.docx
-~$*.pdf
-~$*.pptx
-~$*.xlsx
+~$*
 ~*.tmp
 *.tmp
 
