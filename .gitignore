@@ -5,8 +5,9 @@ venv/
 __pycache__/
 *.pyc
 
-# Exclude TCC text documents, slides, and PDF papers
+# Exclude TCC text documents, literature notes, slides, docx, pdf
 texto_tcc/
+fichamentos/
 artigos_baixados/
 artigos_descartados/
 artigos_manter/
