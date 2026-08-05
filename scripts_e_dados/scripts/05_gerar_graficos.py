@@ -9,7 +9,7 @@
 # ]
 # ///
 """
-Script 05: Geração de Gráficos Acadêmicos de Alta Resolução (300 DPI) para o TCC
+Script 05: Geração de Gráficos Acadêmicos para o TCC (Recorte: Maio/2022 a Abril/2026, 300 DPI)
 Processa os dados de scripts_e_dados/Dados e salva todas as figuras na pasta scripts_e_dados/Graficos/
 """
 import os
@@ -20,11 +20,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
 
-# Configuração de Backend e Estilo Matplotlib para Publicação
 matplotlib.use("Agg")
 plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
 
-# Parâmetros Estéticos Globais
 plt.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"],
@@ -46,9 +44,13 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DADOS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Dados")
 GRAFICOS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Graficos")
 
+# Recorte Temporal de Análise Solicitado (Maio/2022 a Abril/2026)
+DATA_INICIO = pd.to_datetime("2022-05-01")
+DATA_FIM = pd.to_datetime("2026-04-30")
+
 
 def carregar_dados():
-    """Carrega datasets da pasta Dados."""
+    """Carrega datasets da pasta Dados filtrados para Maio/2022 a Abril/2026."""
     dados = {}
     arquivos = {
         "depeg": "depeg_steth_eth.csv",
@@ -66,6 +68,7 @@ def carregar_dados():
             df = pd.read_csv(caminho)
             if "data" in df.columns:
                 df["data"] = pd.to_datetime(df["data"])
+                df = df[(df["data"] >= DATA_INICIO) & (df["data"] <= DATA_FIM)].reset_index(drop=True)
             dados[chave] = df
     return dados
 
@@ -80,32 +83,30 @@ def salvar_figura(fig, filename):
 
 
 def fig01_depeg_historico(df_depeg):
-    """Figura 1: Evolução Histórica da Paridade stETH/ETH e Depeg %."""
+    """Figura 1: Evolução Histórica da Paridade stETH/ETH e Depeg % (Maio/2022 - Abril/2026)."""
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7), sharex=True, gridspec_kw={"height_ratios": [2, 1.2]})
 
-    # Subplot 1: Preço Ratio stETH/ETH
     ax1.plot(df_depeg["data"], df_depeg["preco_steth_eth"], color="#1f77b4", linewidth=1.2, label="Razão stETH/ETH")
     ax1.axhline(1.0, color="#d62728", linestyle="--", linewidth=1.2, label="Paridade 1:1 (ETH)")
 
-    # Eventos de mercado
     eventos = [
         (pd.to_datetime("2022-05-12"), 0.93, "Crash Terra/LUNA", "#d62728"),
         (pd.to_datetime("2022-11-09"), 0.98, "Falência FTX", "#ff7f0e"),
         (pd.to_datetime("2023-04-12"), 1.00, "Shanghai Upgrade", "#2ca02c"),
+        (pd.to_datetime("2026-04-18"), 0.99, "Hack KelpDAO", "#9467bd"),
     ]
     for dt, y_pos, texto, cor in eventos:
         if df_depeg["data"].min() <= dt <= df_depeg["data"].max():
             ax1.axvline(dt, color=cor, linestyle=":", alpha=0.7, linewidth=1.2)
-            ax1.annotate(texto, xy=(dt, y_pos), xytext=(dt + pd.Timedelta(days=25), y_pos - 0.03),
+            ax1.annotate(texto, xy=(dt, y_pos), xytext=(dt + pd.Timedelta(days=20), y_pos - 0.03),
                          arrowprops=dict(arrowstyle="->", color=cor, lw=0.9), fontsize=8, color=cor, fontweight="bold",
                          bbox=dict(boxstyle="round,pad=0.2", facecolor="white", edgecolor=cor, alpha=0.8))
 
     ax1.set_ylabel("Preço stETH em ETH")
-    ax1.set_title("Figura 1: Série Histórica da Paridade stETH/ETH e Eventos de Estresse (2020-2026)", fontweight="bold", pad=12)
+    ax1.set_title("Figura 1: Série Histórica da Paridade stETH/ETH e Eventos de Estresse (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
     ax1.legend(loc="lower right", frameon=True)
     ax1.set_ylim(0.85, 1.08)
 
-    # Subplot 2: Depeg em Porcentagem
     ax2.plot(df_depeg["data"], df_depeg["depeg_pct"], color="#9467bd", linewidth=1.0, label="Depeg (%)")
     ax2.axhline(0, color="black", linestyle="-", linewidth=0.8)
     ax2.axhline(-2.0, color="#ff7f0e", linestyle=":", linewidth=1.0, label="Limiar de Alerta (-2%)")
@@ -116,8 +117,8 @@ def fig01_depeg_historico(df_depeg):
     ax2.set_ylabel("Depeg (%)")
     ax2.set_xlabel("Data")
     ax2.legend(loc="lower right", frameon=True)
-    ax2.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m"))
-    ax2.xaxis.set_major_locator(mdates.MonthLocator(interval=6))
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
+    ax2.xaxis.set_major_locator(mdates.MonthLocator(interval=4))
 
     plt.tight_layout()
     salvar_figura(fig, "fig01_depeg_historico_steth.png")
@@ -126,17 +127,16 @@ def fig01_depeg_historico(df_depeg):
 def fig02_depeg_pre_pos_shanghai(df_depeg):
     """Figura 2: Análise Comparativa Pré vs Pós-Shanghai Upgrade (12/04/2023)."""
     data_shanghai = pd.to_datetime("2023-04-12")
-    df_depeg["periodo"] = np.where(df_depeg["data"] <= data_shanghai, "Pré-Shanghai\n(Sem Saques Nativos)", "Pós-Shanghai\n(Com Saques Nativos)")
+    df_depeg["periodo"] = np.where(df_depeg["data"] <= data_shanghai, "Pré-Shanghai\n(Sem Saques)", "Pós-Shanghai\n(Com Saques)")
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5), gridspec_kw={"width_ratios": [2, 1]})
 
-    # Subplot A: Série com Divisor
     pre = df_depeg[df_depeg["data"] <= data_shanghai]
     pos = df_depeg[df_depeg["data"] > data_shanghai]
 
     ax1.plot(pre["data"], pre["depeg_pct"], color="#d62728", linewidth=1.0, label="Pré-Shanghai (Volatilidade Alta)")
     ax1.plot(pos["data"], pos["depeg_pct"], color="#2ca02c", linewidth=1.0, label="Pós-Shanghai (Estabilizado)")
-    ax1.axvline(data_shanghai, color="black", linestyle="--", linewidth=1.5, label="Upgrade Shanghai (12/04/2023)")
+    ax1.axvline(data_shanghai, color="black", linestyle="--", linewidth=1.5, label="Shanghai (12/04/2023)")
     ax1.axhline(0, color="gray", linestyle=":", linewidth=0.8)
 
     ax1.set_ylabel("Depeg (%)")
@@ -145,8 +145,7 @@ def fig02_depeg_pre_pos_shanghai(df_depeg):
     ax1.legend(loc="lower right", frameon=True)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
 
-    # Subplot B: Boxplot Comparativo
-    sns.boxplot(x="periodo", y="depeg_pct", data=df_depeg, ax=ax2, palette=["#ff9999", "#99ff99"], width=0.4, fliersize=2)
+    sns.boxplot(x="periodo", y="depeg_pct", data=df_depeg, ax=ax2, hue="periodo", palette=["#ff9999", "#99ff99"], width=0.4, fliersize=2, legend=False)
     ax2.axhline(0, color="gray", linestyle=":", linewidth=0.8)
     ax2.set_ylabel("Depeg (%)")
     ax2.set_xlabel("")
@@ -158,9 +157,8 @@ def fig02_depeg_pre_pos_shanghai(df_depeg):
 
 
 def fig03_histograma_distribuicao(df_depeg):
-    """Figura 3: Histograma e Densidade KDE da Distribuição do Depeg (%)."""
+    """Figura 3: Histograma e Densidade KDE da Distribuição do Depeg (%) no Recorte."""
     fig, ax = plt.subplots(figsize=(9, 5))
-
     depeg = df_depeg["depeg_pct"].dropna()
 
     sns.histplot(depeg, kde=True, ax=ax, color="#1f77b4", bins=60, stat="density", alpha=0.4, edgecolor="white")
@@ -175,11 +173,10 @@ def fig03_histograma_distribuicao(df_depeg):
 
     ax.set_xlabel("Depeg (%)")
     ax.set_ylabel("Densidade de Frequência")
-    ax.set_title("Figura 3: Distribuição Empírica do Depeg stETH/ETH (Assimetria à Esquerda)", fontweight="bold", pad=12)
+    ax.set_title("Figura 3: Distribuição Empírica do Depeg stETH/ETH (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
     ax.set_xlim(-15, 5)
     ax.legend(loc="upper left", frameon=True)
 
-    # Cauda longa anotada
     ax.annotate("Cauda longa de liquidação em momentos de estresse\n(Crash Terra/LUNA depeg < -10%)",
                 xy=(-10, 0.05), xytext=(-14, 0.15),
                 arrowprops=dict(arrowstyle="->", color="#d62728", lw=1),
@@ -203,7 +200,7 @@ def fig04_rendimento_apr(df_apr_lido, df_apr_direto):
 
     ax.set_ylabel("Taxa Anual de Rendimento (%)")
     ax.set_xlabel("Data")
-    ax.set_title("Figura 4: Rendimento de Staking — Lido stETH vs. Solo Staking Direto (2022-2026)", fontweight="bold", pad=12)
+    ax.set_title("Figura 4: Rendimento de Staking — Lido stETH vs. Solo Staking Direto (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
     ax.legend(loc="upper right", frameon=True)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
 
@@ -231,7 +228,7 @@ def fig05_tvl_vs_preco_eth(df_tvl, df_preco_eth):
     ax2.tick_params(axis="y", labelcolor=color_eth)
 
     ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
-    ax1.set_title("Figura 5: Relação entre o Capital Trava no Protocolo Lido (TVL) e a Cotação do ETH", fontweight="bold", pad=12)
+    ax1.set_title("Figura 5: Relação entre o Capital Trava no Protocolo Lido (TVL) e a Cotação do ETH (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
 
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
@@ -242,16 +239,12 @@ def fig05_tvl_vs_preco_eth(df_tvl, df_preco_eth):
 
 
 def fig06_market_share_stacked(df_share_hist):
-    """Figura 6: Gráfico de Área Empilhada do Market Share de Liquid Staking (%) ao Longo do Tempo."""
+    """Figura 6: Gráfico de Área Empilhada do Market Share de Liquid Staking (%) no Recorte."""
     fig, ax = plt.subplots(figsize=(11, 6))
 
     cols_tvl = [c for c in df_share_hist.columns if c.startswith("tvl_")]
     df_clean = df_share_hist.dropna(subset=["total_top_tvl"]).copy()
     df_clean = df_clean[df_clean["total_top_tvl"] > 0]
-
-    # Calcular porcentagem de cada protocolo
-    pct_df = pd.DataFrame()
-    pct_df["data"] = df_clean["data"]
 
     nomes_map = {
         "tvl_lido": "Lido DAO",
@@ -265,7 +258,6 @@ def fig06_market_share_stacked(df_share_hist):
         "tvl_ankr": "Ankr",
     }
 
-    # Ordenar por maior tamanho atual
     ultimos = df_clean[cols_tvl].iloc[-1].fillna(0)
     cols_ordenadas = ultimos.sort_values(ascending=False).index.tolist()
 
@@ -279,13 +271,11 @@ def fig06_market_share_stacked(df_share_hist):
     colors = sns.color_palette("tab10", len(labels))
 
     ax.stackplot(df_clean["data"], y_data, labels=labels, colors=colors, alpha=0.85)
-
-    # Linha crítica de alarme de governança / consenso (33.3%)
     ax.axhline(33.33, color="black", linestyle="--", linewidth=1.5, label="Teto Crítico de Consenso (33,3%)")
 
     ax.set_ylabel("Participação de Mercado - Market Share (%)")
     ax.set_xlabel("Data")
-    ax.set_title("Figura 6: Evolução do Market Share dos Protocolos de Liquid Staking no Ethereum (2020-2026)", fontweight="bold", pad=12)
+    ax.set_title("Figura 6: Evolução do Market Share dos Protocolos de Liquid Staking no Ethereum (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
     ax.set_ylim(0, 100)
     ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), frameon=True)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
@@ -309,7 +299,7 @@ def fig07_scatter_market_share_vs_depeg(df_share_hist, df_depeg):
 
     ax.set_xlabel("Market Share da Lido DAO (%)")
     ax.set_ylabel("Depeg stETH (%)")
-    ax.set_title("Figura 7: Relação de Regressão: Concentração do Lido DAO vs. Magnitude do Depeg", fontweight="bold", pad=12)
+    ax.set_title("Figura 7: Regressão: Concentração da Lido DAO vs. Magnitude do Depeg (Maio/2022 – Abril/2026)", fontweight="bold", pad=12)
     ax.legend(loc="lower left", frameon=True)
 
     plt.tight_layout()
@@ -335,7 +325,6 @@ def fig08_indice_hhi(df_share_hist):
 
     ax.plot(df_clean["data"], df_clean["hhi"], color="#d62728", linewidth=1.5, label="Índice HHI (Liquid Staking)")
 
-    # Limiares HHI
     ax.axhline(2500, color="#ff7f0e", linestyle="--", linewidth=1.2, label="Mercado Altamente Concentrado (HHI > 2500)")
     ax.axhline(1500, color="#2ca02c", linestyle=":", linewidth=1.2, label="Mercado Moderadamente Concentrado (1500-2500)")
 
@@ -343,7 +332,7 @@ def fig08_indice_hhi(df_share_hist):
 
     ax.set_ylabel("Índice Herfindahl-Hirschman (HHI)")
     ax.set_xlabel("Data")
-    ax.set_title("Figura 8: Evolução da Concentração de Mercado no Ecossistema Liquid Staking (HHI)", fontweight="bold", pad=12)
+    ax.set_title("Figura 8: Evolução da Concentração de Mercado no Ecossistema Liquid Staking (HHI: 2022–2026)", fontweight="bold", pad=12)
     ax.set_ylim(0, 10000)
     ax.legend(loc="upper right", frameon=True)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b/%Y"))
@@ -353,9 +342,9 @@ def fig08_indice_hhi(df_share_hist):
 
 
 def main():
-    print("=" * 70)
-    print("SCRIPT 05 -- Geração de Gráficos Acadêmicos para o TCC (300 DPI)")
-    print("=" * 70)
+    print("=" * 75)
+    print("SCRIPT 05 -- Geração de Gráficos Acadêmicos (Recorte: Maio/2022 a Abril/2026)")
+    print("=" * 75)
 
     dados = carregar_dados()
 
@@ -388,9 +377,9 @@ def main():
         print("[8/8] Gerando Figura 8: Evolução do Índice HHI de Concentração...")
         fig08_indice_hhi(dados["market_share_hist"].copy())
 
-    print("\n" + "=" * 70)
-    print("TODOS OS 8 GRÁFICOS GERADOS E SALVOS COM SUCESSO EM scripts_e_dados/Graficos/")
-    print("=" * 70)
+    print("\n" + "=" * 75)
+    print("TODOS OS 8 GRÁFICOS REGERADOS COM SUCESSO (RECORTE MAIO/22 - ABRIL/26)")
+    print("=" * 75)
 
 
 if __name__ == "__main__":

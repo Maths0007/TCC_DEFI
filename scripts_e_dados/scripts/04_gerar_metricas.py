@@ -7,7 +7,7 @@
 # ]
 # ///
 """
-Script 04: Cálculo de Métricas Estatísticas e Econométricas do TCC
+Script 04: Cálculo de Métricas Estatísticas e Econométricas do TCC (Recorte: Maio/2022 a Abril/2026)
 Processa os dados coletados da pasta scripts_e_dados/Dados e gera:
 1. Tabelas estatísticas em CSV (scripts_e_dados/Metricas/)
 2. Resumo em JSON (scripts_e_dados/Metricas/resumo_metricas.json)
@@ -23,9 +23,13 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DADOS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Dados")
 METRICAS_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), "Metricas")
 
+# Recorte Temporal de Análise Solicitado (Maio/2022 a Abril/2026)
+DATA_INICIO = pd.to_datetime("2022-05-01")
+DATA_FIM = pd.to_datetime("2026-04-30")
+
 
 def carregar_dados():
-    """Carrega os datasets CSV da pasta Dados."""
+    """Carrega os datasets CSV da pasta Dados filtrados para Maio/2022 a Abril/2026."""
     dados = {}
     arquivos = {
         "depeg": "depeg_steth_eth.csv",
@@ -43,19 +47,19 @@ def carregar_dados():
             df = pd.read_csv(caminho)
             if "data" in df.columns:
                 df["data"] = pd.to_datetime(df["data"])
+                df = df[(df["data"] >= DATA_INICIO) & (df["data"] <= DATA_FIM)].reset_index(drop=True)
             dados[chave] = df
-            print(f"  [OK] Carregado {filename} ({len(df)} linhas)")
+            print(f"  [OK] Carregado e filtrado {filename} ({len(df)} linhas | 2022-05-01 a 2026-04-30)")
         else:
             print(f"  [AVISO] Arquivo não encontrado: {filename}")
     return dados
 
 
 def calcular_metricas_depeg(df_depeg):
-    """Calcula estatísticas descritivas completas do Depeg stETH/ETH."""
+    """Calcula estatísticas descritivas completas do Depeg stETH/ETH no recorte 2022-2026."""
     depeg = df_depeg["depeg_pct"].dropna()
     ratio = df_depeg["preco_steth_eth"].dropna()
 
-    # Métricas descritivas
     metricas = {
         "total_observacoes_dias": int(len(depeg)),
         "data_inicio": str(df_depeg["data"].min().strftime("%Y-%m-%d")),
@@ -75,19 +79,15 @@ def calcular_metricas_depeg(df_depeg):
         "percentil_75_pct": float(np.percentile(depeg, 75)),
         "percentil_95_pct": float(np.percentile(depeg, 95)),
         "percentil_99_pct": float(np.percentile(depeg, 99)),
-        # Frequências de depeg severo
         "dias_depeg_abaixo_minus_1pct": int((depeg < -1.0).sum()),
         "dias_depeg_abaixo_minus_2pct": int((depeg < -2.0).sum()),
         "dias_depeg_abaixo_minus_5pct": int((depeg < -5.0).sum()),
         "dias_depeg_abaixo_minus_10pct": int((depeg < -10.0).sum()),
         "pct_dias_depeg_abaixo_minus_2pct": float((depeg < -2.0).mean() * 100),
+        "autocorrelacao_ar1": float(depeg.autocorr(lag=1)),
+        "autocorrelacao_ar2": float(depeg.autocorr(lag=2)),
+        "autocorrelacao_ar5": float(depeg.autocorr(lag=5)),
     }
-
-    # Autocorrelação temporal (AR1, AR2, AR5)
-    metricas["autocorrelacao_ar1"] = float(depeg.autocorr(lag=1))
-    metricas["autocorrelacao_ar2"] = float(depeg.autocorr(lag=2))
-    metricas["autocorrelacao_ar5"] = float(depeg.autocorr(lag=5))
-
     return metricas
 
 
@@ -98,7 +98,6 @@ def calcular_pre_pos_shanghai(df_depeg):
     pre = df_depeg[df_depeg["data"] <= data_shanghai]["depeg_pct"].dropna()
     pos = df_depeg[df_depeg["data"] > data_shanghai]["depeg_pct"].dropna()
 
-    # Testes estatísticos
     t_stat, p_val_t = stats.ttest_ind(pre, pos, equal_var=False)
     f_stat = np.var(pre, ddof=1) / np.var(pos, ddof=1) if np.var(pos, ddof=1) > 0 else np.nan
     p_val_f = stats.f.sf(f_stat, len(pre) - 1, len(pos) - 1)
@@ -166,7 +165,7 @@ def calcular_eventos_estresse(df_depeg):
 
 
 def calcular_metricas_rendimento(df_apr_lido, df_apr_direto):
-    """Calcula estatísticas de APR do Lido stETH vs. Solo Staking Direto."""
+    """Calcula estatísticas de APR do Lido stETH vs. Solo Staking Direto no recorte."""
     if df_apr_lido is None or df_apr_direto is None:
         return {}
 
@@ -199,17 +198,14 @@ def calcular_concentracao_market_share(df_share_hist, df_share_snap, df_depeg):
     """Calcula estatísticas de concentração de mercado, HHI e correlação com Depeg."""
     res = {}
 
-    # Snapshot atual
     if df_share_snap is not None and len(df_share_snap) > 0:
         top1 = df_share_snap.iloc[0]
         res["lido_share_atual_pct"] = float(top1.get("market_share_pct", 0))
         res["lido_tvl_atual_usd"] = float(top1.get("tvl_usd", 0))
 
-        # HHI snapshot
         shares = df_share_snap["market_share_pct"].dropna()
         res["hhi_atual"] = float((shares ** 2).sum())
 
-    # Série histórica de Market Share e HHI
     if df_share_hist is not None and len(df_share_hist) > 0:
         if "lido_share_pct" in df_share_hist.columns:
             lido_hist = df_share_hist["lido_share_pct"].dropna()
@@ -217,7 +213,6 @@ def calcular_concentracao_market_share(df_share_hist, df_share_snap, df_depeg):
             res["lido_share_historico_minimo_pct"] = float(lido_hist.min())
             res["lido_share_historico_maximo_pct"] = float(lido_hist.max())
 
-        # Calcular HHI histórico linha a linha
         cols_tvl = [c for c in df_share_hist.columns if c.startswith("tvl_")]
         hhi_list = []
         for idx, row in df_share_hist.iterrows():
@@ -233,7 +228,6 @@ def calcular_concentracao_market_share(df_share_hist, df_share_snap, df_depeg):
             res["hhi_historico_minimo"] = float(df_hhi["hhi"].min())
             res["hhi_historico_maximo"] = float(df_hhi["hhi"].max())
 
-        # Correlação entre Lido Market Share e Depeg stETH
         if "lido_share_pct" in df_share_hist.columns and df_depeg is not None:
             merged = pd.merge(df_share_hist[["data", "lido_share_pct"]], df_depeg[["data", "depeg_pct"]], on="data").dropna()
             if len(merged) > 10:
@@ -251,29 +245,28 @@ def calcular_concentracao_market_share(df_share_hist, df_share_snap, df_depeg):
 
 
 def gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, concentracao):
-    """Gera o relatório descritivo completo em Markdown."""
+    """Gera o relatório descritivo completo em Markdown para o recorte de Maio/2022 a Abril/2026."""
     relatorio = f"""# Relatório de Métricas Estatísticas e Econométricas — TCC Lido DAO & Liquid Staking
-
+**Recorte Temporal:** Maio de 2022 a Abril de 2026 (48 Meses)  
 **Data de Geração:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}  
-**Autor:** Matheus — TCC Finanças Descentralizadas (DeFi)
 
 ---
 
-## 1. Estatísticas Descritivas do Depeg stETH/ETH
+## 1. Estatísticas Descritivas do Depeg stETH/ETH (Maio/2022 a Abril/2026)
 
 | Métrica | Valor | Observação |
 |---|---|---|
-| **Total de Observações (Dias)** | {metricas_depeg['total_observacoes_dias']} | Jan/2021 a Jul/2026 |
+| **Total de Observações (Dias)** | {metricas_depeg['total_observacoes_dias']} | Recorte Maio/2022 – Abril/2026 |
 | **Preço Médio (stETH/ETH)** | {metricas_depeg['preco_ratio_medio']:.6f} | Paridade nominal teórica: 1.000000 |
-| **Depeg Médio (%)** | {metricas_depeg['depeg_medio_pct']:.4f}% | Leve desconto estrutural histórico |
+| **Depeg Médio (%)** | {metricas_depeg['depeg_medio_pct']:.4f}% | Média de desvio no período |
 | **Depeg Mediano (%)** | {metricas_depeg['depeg_mediana_pct']:.4f}% | - |
-| **Desvio Padrão (%)** | {metricas_depeg['depeg_desvio_padrao_pct']:.4f}% | Medida de volatilidade do peg |
-| **Maior Desconto / Depeg Mínimo (%)** | {metricas_depeg['depeg_minimo_pct']:.4f}% | Ocorrido durante o colapso da Terra/LUNA |
-| **Maior Prêmio / Depeg Máximo (%)** | {metricas_depeg['depeg_maximo_pct']:.4f}% | Ocorrido pós-falência da FTX |
-| **Assimetria (Skewness)** | {metricas_depeg['depeg_assimetria_skewness']:.4f} | Negativa (cauda longa de desvalorização em crises) |
-| **Curtose (Kurtosis)** | {metricas_depeg['depeg_curtose_kurtosis']:.4f} | Leptocúrtica (caudas pesadas / eventos extremos) |
-| **Autocorrelação AR(1)** | {metricas_depeg['autocorrelacao_ar1']:.4f} | Inércia temporal do depeg (Gogol et al., 2024) |
-| **Autocorrelação AR(5)** | {metricas_depeg['autocorrelacao_ar5']:.4f} | Persistência de iliquidez a médio prazo |
+| **Desvio Padrão (%)** | {metricas_depeg['depeg_desvio_padrao_pct']:.4f}% | Volatilidade temporal do peg |
+| **Maior Desconto / Depeg Mínimo (%)** | {metricas_depeg['depeg_minimo_pct']:.4f}% | Registrado durante o colapso Terra/LUNA |
+| **Maior Prêmio / Depeg Máximo (%)** | {metricas_depeg['depeg_maximo_pct']:.4f}% | Registrado pós-insolvência da FTX |
+| **Assimetria (Skewness)** | {metricas_depeg['depeg_assimetria_skewness']:.4f} | Negativa (cauda longa em desvalorizações) |
+| **Curtose (Kurtosis)** | {metricas_depeg['depeg_curtose_kurtosis']:.4f} | Leptocúrtica (caudas pesadas) |
+| **Autocorrelação AR(1)** | {metricas_depeg['autocorrelacao_ar1']:.4f} | Inércia de depeg no curto prazo |
+| **Autocorrelação AR(5)** | {metricas_depeg['autocorrelacao_ar5']:.4f} | Persistência de liquidez a médio prazo |
 
 ### Distribuição Percentílica do Depeg (%)
 - **Percentil 1% (Worst 1%):** {metricas_depeg['percentil_1_pct']:.4f}%
@@ -287,22 +280,20 @@ def gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, con
 
 ## 2. Impacto do Upgrade Shanghai/Capella (Habilitação de Saques Nativos em 12/04/2023)
 
-| Parâmetro | Pré-Shanghai (Sem Saques) | Pós-Shanghai (Com Saques) | Impacto / Teste |
+| Parâmetro | Pré-Shanghai (Sem Saques: Maio/22 - Abr/23) | Pós-Shanghai (Com Saques: Abr/23 - Abr/26) | Impacto / Teste |
 |---|---|---|---|
 | **Período** | {pre_pos['pre_shanghai']['periodo']} | {pre_pos['pos_shanghai']['periodo']} | - |
 | **Dias Analisados** | {pre_pos['pre_shanghai']['dias']} | {pre_pos['pos_shanghai']['dias']} | - |
-| **Depeg Médio (%)** | {pre_pos['pre_shanghai']['depeg_medio_pct']:.4f}% | {pre_pos['pos_shanghai']['depeg_medio_pct']:.4f}% | Dif. Média (t-stat: {pre_pos['teste_hipotese']['t_statistic']:.2f}, p: {pre_pos['teste_hipotese']['p_value_diferenca_medias']:.4e}) |
+| **Depeg Médio (%)** | {pre_pos['pre_shanghai']['depeg_medio_pct']:.4f}% | {pre_pos['pos_shanghai']['depeg_medio_pct']:.4f}% | t-stat: {pre_pos['teste_hipotese']['t_statistic']:.2f} (p: {pre_pos['teste_hipotese']['p_value_diferenca_medias']:.4e}) |
 | **Desvio Padrão (%)** | {pre_pos['pre_shanghai']['desvio_padrao_pct']:.4f}% | {pre_pos['pos_shanghai']['desvio_padrao_pct']:.4f}% | **Redução de {pre_pos['teste_hipotese']['reducao_desvio_padrao_pct']:.1f}% na volatilidade** |
-| **Depeg Mínimo (%)** | {pre_pos['pre_shanghai']['depeg_minimo_pct']:.4f}% | {pre_pos['pos_shanghai']['depeg_minimo_pct']:.4f}% | Atenuação drástica do risco de cauda |
-| **Dias com Depeg < -2%** | {pre_pos['pre_shanghai']['dias_depeg_abaixo_minus_2pct']} ({pre_pos['pre_shanghai']['pct_dias_depeg_abaixo_minus_2pct']:.1f}%) | {pre_pos['pos_shanghai']['dias_depeg_abaixo_minus_2pct']} ({pre_pos['pos_shanghai']['pct_dias_depeg_abaixo_minus_2pct']:.1f}%) | Eliminação do basis risk crônico |
-
-> **Insight Acadêmico:** A habilitação dos saques nativos no protocolo Ethereum provou empiricamente a tese de eficiência de arbitragem: o risco de *depeg* duradouro reportado nas literaturas clássicas (ex: Scharnowski & Jahanshahloo, 2025) foi drasticamente atenuado, pois os arbitradores agora contam com o mecanismo de resgate 1:1 direto na Beacon Chain.
+| **Depeg Mínimo (%)** | {pre_pos['pre_shanghai']['depeg_minimo_pct']:.4f}% | {pre_pos['pos_shanghai']['depeg_minimo_pct']:.4f}% | Eliminação de desvios extremos |
+| **Dias com Depeg < -2%** | {pre_pos['pre_shanghai']['dias_depeg_abaixo_minus_2pct']} ({pre_pos['pre_shanghai']['pct_dias_depeg_abaixo_minus_2pct']:.1f}%) | {pre_pos['pos_shanghai']['dias_depeg_abaixo_minus_2pct']} ({pre_pos['pos_shanghai']['pct_dias_depeg_abaixo_minus_2pct']:.1f}%) | Estabilização da arbitragem 1:1 |
 
 ---
 
 ## 3. Comportamento em Janelas de Estresse Sistêmico
 
-| Evento de Mercado | Período | Depeg Médio (%) | Depeg Mínimo / Pior Desconto (%) | Desvio Padrão (%) |
+| Evento de Mercado | Período | Depeg Médio (%) | Depeg Mínimo (%) | Desvio Padrão (%) |
 |---|---|---|---|---|
 """
     for ev in eventos:
@@ -320,33 +311,27 @@ def gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, con
 | **Rendimento Máximo (%)** | {metricas_apr.get('apr_lido_maximo_pct', 0):.2f}% | {metricas_apr.get('apr_direto_maximo_pct', 0):.2f}% | - |
 | **Desvio Padrão (%)** | {metricas_apr.get('apr_lido_desvio_padrao_pct', 0):.2f}% | - | Tracking Error: {metricas_apr.get('tracking_error_pct', 0):.4f}% |
 
-> **Nota:** A Lido DAO retém uma taxa fixa de 10% sobre as recompensas brutas de staking (5% repassados aos operadores de nós e 5% destinados à tesouraria da DAO).
-
 ---
 
 ## 5. Concentração de Mercado, HHI e Risco de Governança
 
-- **Market Share Atual da Lido DAO:** **{concentracao.get('lido_share_atual_pct', 0):.2f}%** (TVL: ${concentracao.get('lido_tvl_atual_usd', 0):,.0f})
-- **Market Share Histórico Médio:** **{concentracao.get('lido_share_historico_medio_pct', 0):.2f}%** (Máximo: {concentracao.get('lido_share_historico_maximo_pct', 0):.1f}%, Mínimo: {concentracao.get('lido_share_historico_minimo_pct', 0):.1f}%)
-- **Índice Herfindahl-Hirschman (HHI) Atual:** **{concentracao.get('hhi_atual', 0):.1f}** (Mercado Altamente Concentrado > 2500)
-- **HHI Histórico Médio:** **{concentracao.get('hhi_historico_medio', 0):.1f}**
-
+- **Market Share Médio da Lido DAO (Maio/22 - Abr/26):** **{concentracao.get('lido_share_historico_medio_pct', 0):.2f}%**
+- **Índice Herfindahl-Hirschman (HHI) Médio:** **{concentracao.get('hhi_historico_medio', 0):.1f}** (Mercado Altamente Concentrado > 2500)
 """
     if "correlacao_share_vs_depeg" in concentracao:
         c = concentracao["correlacao_share_vs_depeg"]
-        relatorio += f"""### Correlação Estatística entre Dominância da Lido (%) e Depeg do stETH (%)
+        relatorio += f"""### Correlação Estatística (Market Share Lido vs Depeg stETH)
 - **Coeficiente de Pearson (r):** `{c['pearson_r']:.4f}` (p-value: `{c['pearson_p_value']:.4e}`)
 - **Coeficiente de Spearman (r_s):** `{c['spearman_r']:.4f}` (p-value: `{c['spearman_p_value']:.4e}`)
-- **Interpretação:** Validação da tese de Scharnowski & Jahanshahloo (2025) — maior concentração do protocolo correlaciona-se com maior exigência de prêmio de risco no mercado secundário.
 """
 
     return relatorio
 
 
 def main():
-    print("=" * 70)
-    print("SCRIPT 04 -- Cálculo de Métricas Estatísticas e Econométricas")
-    print("=" * 70)
+    print("=" * 75)
+    print("SCRIPT 04 -- Cálculo de Métricas (Recorte: Maio/2022 a Abril/2026)")
+    print("=" * 75)
 
     os.makedirs(METRICAS_DIR, exist_ok=True)
     dados = carregar_dados()
@@ -355,46 +340,35 @@ def main():
         print("[ERRO] dataset depeg_steth_eth.csv não encontrado!")
         return
 
-    # 1. Depeg Geral
-    print("\n[1/5] Calculando estatísticas descritivas do Depeg...")
+    print("\n[1/5] Calculando estatísticas descritivas do Depeg (2022-2026)...")
     metricas_depeg = calcular_metricas_depeg(dados["depeg"])
 
-    # 2. Pré vs Pós Shanghai
-    print("[2/5] Analisando impacto do Upgrade Shanghai (12/04/2023)...")
+    print("[2/5] Analisando impacto do Upgrade Shanghai...")
     pre_pos = calcular_pre_pos_shanghai(dados["depeg"])
 
-    # 3. Eventos de Estresse
     print("[3/5] Mapeando janelas de estresse sistêmico...")
     eventos = calcular_eventos_estresse(dados["depeg"])
 
-    # 4. Rendimentos APR
-    print("[4/5] Calculando estatísticas de APR Lido vs Staking Direto...")
+    print("[4/5] Calculando estatísticas de APR...")
     metricas_apr = calcular_metricas_rendimento(dados.get("apr_lido"), dados.get("apr_direto"))
 
-    # 5. Concentração e HHI
-    print("[5/5] Avaliando concentração de mercado (HHI) e correlações...")
+    print("[5/5] Avaliando concentração HHI e correlações...")
     concentracao = calcular_concentracao_market_share(
         dados.get("market_share_hist"), dados.get("market_share_snap"), dados.get("depeg")
     )
 
-    # --- Salvar CSVs de tabelas individualmente ---
-    df_descritiva = pd.DataFrame([metricas_depeg])
-    df_descritiva.to_csv(os.path.join(METRICAS_DIR, "tabela_depeg_descritiva.csv"), index=False)
-
-    df_pre_pos = pd.DataFrame([
+    # Salvar arquivos CSV
+    pd.DataFrame([metricas_depeg]).to_csv(os.path.join(METRICAS_DIR, "tabela_depeg_descritiva.csv"), index=False)
+    pd.DataFrame([
         {**pre_pos["pre_shanghai"], "categoria": "pre_shanghai"},
         {**pre_pos["pos_shanghai"], "categoria": "pos_shanghai"},
-    ])
-    df_pre_pos.to_csv(os.path.join(METRICAS_DIR, "tabela_pre_pos_shanghai.csv"), index=False)
+    ]).to_csv(os.path.join(METRICAS_DIR, "tabela_pre_pos_shanghai.csv"), index=False)
+    pd.DataFrame(eventos).to_csv(os.path.join(METRICAS_DIR, "tabela_eventos_estresse.csv"), index=False)
+    pd.DataFrame([metricas_apr]).to_csv(os.path.join(METRICAS_DIR, "tabela_rendimento_apr.csv"), index=False)
 
-    df_eventos = pd.DataFrame(eventos)
-    df_eventos.to_csv(os.path.join(METRICAS_DIR, "tabela_eventos_estresse.csv"), index=False)
-
-    df_apr = pd.DataFrame([metricas_apr])
-    df_apr.to_csv(os.path.join(METRICAS_DIR, "tabela_rendimento_apr.csv"), index=False)
-
-    # --- Salvar JSON completo ---
+    # Salvar JSON
     resultado_completo = {
+        "recorte_temporal": "2022-05-01 a 2026-04-30",
         "metricas_depeg": metricas_depeg,
         "pre_pos_shanghai": pre_pos,
         "eventos_estresse": eventos,
@@ -407,16 +381,16 @@ def main():
         json.dump(resultado_completo, f, indent=2, ensure_ascii=False)
     print(f"\n  [OK] Salvo JSON consolidado: {caminho_json}")
 
-    # --- Gerar e Salvar Relatório Markdown ---
+    # Salvar Markdown
     md_texto = gerar_relatorio_markdown(metricas_depeg, pre_pos, eventos, metricas_apr, concentracao)
     caminho_md = os.path.join(METRICAS_DIR, "relatorio_metricas_tcc.md")
     with open(caminho_md, "w", encoding="utf-8") as f:
         f.write(md_texto)
     print(f"  [OK] Salvo Relatório Markdown: {caminho_md}")
 
-    print("\n" + "=" * 70)
-    print("MÉTRICAS CALCULADAS E SALVAS COM SUCESSO EM scripts_e_dados/Metricas/")
-    print("=" * 70)
+    print("\n" + "=" * 75)
+    print("MÉTRICAS RECALCULADAS COM SUCESSO (RECORTE MAIO/22 - ABRIL/26)")
+    print("=" * 75)
 
 
 if __name__ == "__main__":
