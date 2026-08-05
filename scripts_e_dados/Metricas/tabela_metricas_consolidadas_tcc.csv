@@ -1,0 +1,26 @@
+﻿categoria,metrica,valor
+Depeg stETH/ETH,Período Analisado,2022-05-01 a 2026-04-30
+Depeg stETH/ETH,Total de Observações (Dias),1313
+Depeg stETH/ETH,Razão Média (stETH/ETH),0.995941
+Depeg stETH/ETH,Depeg Médio (%),-0.4059%
+Depeg stETH/ETH,Depeg Mediano (%),-0.1054%
+Depeg stETH/ETH,Desvio Padrão do Depeg (%),1.6837%
+Depeg stETH/ETH,Maior Desconto / Depeg Mínimo (%),-13.0469%
+Depeg stETH/ETH,Maior Prêmio / Depeg Máximo (%),14.2740%
+Depeg stETH/ETH,Assimetria (Skewness),-0.3473
+Depeg stETH/ETH,Curtose (Kurtosis),15.7141
+Depeg stETH/ETH,Autocorrelação AR(1),0.2363
+Depeg stETH/ETH,Autocorrelação AR(5),0.2497
+Efeito Shanghai (12/04/23),Pré-Shanghai: Depeg Médio (%),-1.3860%
+Efeito Shanghai (12/04/23),Pré-Shanghai: Desvio Padrão (%),2.1470%
+Efeito Shanghai (12/04/23),Pós-Shanghai: Depeg Médio (%),-0.1042%
+Efeito Shanghai (12/04/23),Pós-Shanghai: Desvio Padrão (%),1.3804%
+Efeito Shanghai (12/04/23),Redução da Volatilidade do Depeg (%),35.7%
+Efeito Shanghai (12/04/23),Teste t (p-value),1.0458e-20
+Rendimento & Spread,Lido stETH APY Médio (%),3.54%
+Rendimento & Spread,Solo Staking APR Estimado (%),3.93%
+Rendimento & Spread,Spread da Taxa Lido DAO (10%),0.393%
+Concentração & Governança,Market Share Histórico Médio Lido (%),78.65%
+Concentração & Governança,Índice HHI Histórico Médio,6478.2
+Concentração & Governança,Correlação Pearson (Share Lido vs Depeg),-0.1951
+Concentração & Governança,Correlação Spearman (Share Lido vs Depeg),-0.2411

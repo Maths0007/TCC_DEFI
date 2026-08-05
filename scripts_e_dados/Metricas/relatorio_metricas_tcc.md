@@ -1,6 +1,6 @@
 # Relatório de Métricas Estatísticas e Econométricas — TCC Lido DAO & Liquid Staking
 **Recorte Temporal:** Maio de 2022 a Abril de 2026 (48 Meses)  
-**Data de Geração:** 2026-08-05 12:23:24  
+**Data de Geração:** 2026-08-05 12:25:38  
 
 ---
 
