@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto de TCC - Finanças Descentralizadas & Liquid Staking | UFCG</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header Bar (Conforme PDF da UFCG/UAAC) -->
+    <header class="header-bar">
+        <div class="header-left">
+            <div class="logo-badge">UFCG</div>
+            <div style="font-size: 0.8rem; line-height: 1.2;">
+                <strong>Universidade Federal de Campina Grande</strong><br>
+                <span style="color: #94A3B8;">Centro de Humanidades</span>
+            </div>
+        </div>
+        <div class="header-center">
+            <h1>Unidade Acadêmica de Administração e Contabilidade</h1>
+            <h2>Projeto / Apresentação de TCC</h2>
+        </div>
+        <div class="header-right">
+            <div class="logo-badge" style="background-color: rgba(14, 116, 144, 0.3); border-color: #0E7490;">UAAC</div>
+        </div>
+    </header>
+
+    <!-- Main Presentation Viewport -->
+    <main class="presentation-container">
+
+        <!-- SLIDE 1: COVER (Instruções exatas do PDF Page 1) -->
+        <section class="slide cover-slide active" data-notes="Boa tarde aos membros da banca examinadora. Apresento meu Projeto de Trabalho de Conclusão de Curso intitulado 'Finanças Descentralizadas: A avaliação do liquid staking via Lido DAO como alternativa de investimento em ativos digitais', sob orientação na UAAC/UFCG.">
+            <div class="cover-header">
+                <h2>UNIVERSIDADE FEDERAL DE CAMPINA GRANDE</h2>
+                <h3>CENTRO DE HUMANIDADES</h3>
+                <h4>UNIDADE ACADÊMICA DE ADMINISTRAÇÃO E CONTABILIDADE</h4>
+            </div>
+
+            <div class="cover-title-card">
+                <h1>Finanças Descentralizadas: A avaliação do liquid staking via Lido DAO como alternativa de investimento em ativos digitais</h1>
+            </div>
+
+            <div class="cover-meta">
+                <p class="author">Autor: Matheus Henrique Da Costa</p>
+                <p class="advisor">Orientador(a): [Nome do Orientador / Orientadora]</p>
+                <p class="date">Campina Grande - PB | Novembro/2023</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: INTRODUÇÃO - CONTEXTUALIZAÇÃO -->
+        <section class="slide" data-notes="Contextualizar a transição histórica do Ethereum com 'The Merge' em 2022, saindo do Proof of Work para o Proof of Stake. Explicar como a trava nativa de 32 ETH criou barreiras de liquidez para investidores.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Introdução (1/3)</div>
+                    <h2 class="slide-title">Contextualização: A Evolução do Ethereum & O Staking</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">🌐 O Cenário da Rede Ethereum</div>
+                    <ul class="card-list">
+                        <li><strong>Consolidação em DeFi:</strong> O Ethereum firmou-se como a principal infraestrutura global para contratos inteligentes e Finanças Descentralizadas (SCHÄR, 2021).</li>
+                        <li><strong>A Transição "The Merge" (2022):</strong> Migração histórica do mecanismo de consenso Proof-of-Work (PoW) para Proof-of-Stake (PoS).</li>
+                        <li><strong>Substituição de Ativos:</strong> A segurança da rede passou a depender do capital financeiro bloqueado (staking) em vez de energia computacional (ETHEREUM FOUNDATION, 2022).</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">🔒 A Trava de Liquidez do Staking Direto</div>
+                    <ul class="card-list">
+                        <li><strong>Barreira de Entrada Elevada:</strong> Exigência de aporte mínimo de 32 ETH para operação de nó validador próprio.</li>
+                        <li><strong>Restrição de Iliquidez:</strong> Os ativos nativos ficam totalmente imobilizados no contrato de depósitos, sem liquidez imediata.</li>
+                        <li><strong>Complexidade Operacional:</strong> Risco de penalidades por inatividade e necessidade de infraestrutura 24/7.</li>
+                        <li><strong>Emergência do Liquid Staking:</strong> Solução criada pelo mercado para emitir derivativos líquidos (stETH) e destravar capital.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: INTRODUÇÃO - PROBLEMÁTICA -->
+        <section class="slide" data-notes="Apresentar o dilema central do trabalho: o liquid staking resolve a iliquidez, mas adiciona riscos de smart contracts, riscos de desvinculação de preço (depeg) e taxas de administração. Destacar a Pergunta de Pesquisa.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Introdução (2/3)</div>
+                    <h2 class="slide-title">Problemática & Pergunta de Pesquisa</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card gold">
+                    <div class="card-title">⚖️ O Dilema do Liquid Staking</div>
+                    <ul class="card-list">
+                        <li><strong>Facilidade vs Novas Camadas de Risco:</strong> O liquid staking permite qualquer aporte e entrega o token stETH (Lido DAO), restaurando a liquidez em mercados secundários.</li>
+                        <li><strong>Liquid Staking Basis:</strong> O derivativo stETH não possui garantia de paridade 1:1 no mercado secundário antes de resgates, podendo negociar com deságio (SCHARNOWSKI; JAHANSHAHLOO, 2025).</li>
+                        <li><strong>Risco de Contrato Inteligente:</strong> Vulnerabilidade a hacks ou falhas de código Solidity (HARVEY et al., 2021).</li>
+                        <li><strong>Risco de Slashing Correlacionado:</strong> Compartilhamento de penalidades operacionais do pool de validadores.</li>
+                    </ul>
+                </div>
+                <div class="card navy" style="justify-content: center; background: linear-gradient(135deg, #002B49, #0F172A); color: white;">
+                    <h3 style="color: #38BDF8; font-size: 1.2rem; margin-bottom: 15px;">❓ PERGUNTA DE PESQUISA</h3>
+                    <p style="font-size: 1.25rem; font-weight: 700; line-height: 1.6; color: #FFFFFF;">
+                        “Quais são os retornos, riscos e vantagens do liquid staking via Lido DAO em comparação ao staking direto no Ethereum, com base em dados históricos e métricas públicas?”
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: INTRODUÇÃO - OBJETIVOS & JUSTIFICATIVA -->
+        <section class="slide" data-notes="Detalhar o objetivo geral de avaliar a Lido DAO como alternativa de investimento e listar os 4 objetivos específicos. Justificar pela relevância empírica e acadêmica no mercado DeFi.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Introdução (3/3)</div>
+                    <h2 class="slide-title">Objetivos do Trabalho & Justificativa</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">🎯 Objetivos da Pesquisa</div>
+                    <ul class="card-list">
+                        <li><strong>OBJETIVO GERAL:</strong> Avaliar, com base em dados históricos e métricas públicas, os retornos, riscos e vantagens do liquid staking via Lido DAO como alternativa de investimento.</li>
+                        <li><strong>Obj. Específico 1:</strong> Levantar o histórico de rendimentos (APR/APY) do stETH comparando-o ao staking direto.</li>
+                        <li><strong>Obj. Específico 2:</strong> Analisar a volatilidade e os riscos de desvinculação (depeg) do stETH/ETH.</li>
+                        <li><strong>Obj. Específico 3:</strong> Mapear os riscos estruturais e vantagens em relatórios técnicos.</li>
+                        <li><strong>Obj. Específico 4:</strong> Discutir implicações para estratégias de investimento.</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">💡 Justificativa Científica e Prática</div>
+                    <ul class="card-list">
+                        <li><strong>Crescimento de DeFi e LSDfi:</strong> Expansão acelerada de instrumentos financeiros derivativos sobre redes PoS.</li>
+                        <li><strong>Lacuna de Pesquisa:</strong> Necessidade de estudos quantitativos rigorosos sobre o comportamento de paridade em janelas longas.</li>
+                        <li><strong>Orientação de Investidores:</strong> Mensuração clara do custo de oportunidade da taxa de 10% cobrada pela Lido DAO vs ganho de liquidez.</li>
+                        <li><strong>Dados On-Chain Auditáveis:</strong> Utilização exclusiva de dados secundários públicos e transparentes.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: FUNDAMENTAÇÃO - BLOCKCHAIN & SMART CONTRACTS -->
+        <section class="slide" data-notes="Apresentar os fundamentos conceituais: Blockchain como livro-razão imutável, a Turing-completeness do Ethereum (Buterin, 2014) e a analogia de Vending Machine proposta por Szabo para Smart Contracts (Schär, 2021).">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Fundamentação Teórica (1/4)</div>
+                    <h2 class="slide-title">Infraestrutura Tecnológica: Blockchain & Smart Contracts</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">⛓️ Livro-Razão Imutável & EVM</div>
+                    <ul class="card-list">
+                        <li><strong>Blockchain:</strong> Protocolo distribuído e imutável que registra transações financeiras sem autoridade centralizadora (HARVEY et al., 2021).</li>
+                        <li><strong>Ethereum vs Bitcoin:</strong> Enquanto o Bitcoin opera com lógica restrita de pagamento, o Ethereum é Turing-complete (BUTERIN, 2014).</li>
+                        <li><strong>Ethereum Virtual Machine (EVM):</strong> Ambiente global que executa código em Solidity de forma imutável e auditável.</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">📜 Smart Contracts & Szabo</div>
+                    <ul class="card-list">
+                        <li><strong>Contratos Inteligentes:</strong> Aplicativos que operam de forma determinística na blockchain sem margem para intervenção externa (SCHÄR, 2021).</li>
+                        <li><strong>Analogia da Vending Machine:</strong> A execução automática do contrato ao receber os parâmetros corretos, eliminando intermediários fiduciários.</li>
+                        <li><strong>Base Operacional do Lido:</strong> Todo o protocolo de gestão de depósitos e tokens é automatizado via smart contracts (JIN et al., 2025).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6: FUNDAMENTAÇÃO - DEFI & ECONOMIA DO STAKING -->
+        <section class="slide" data-notes="Explicar a arquitetura em camadas de DeFi proposta por Fabian Schär (2021) e detalhar as 3 fontes de rendimento no Proof of Stake: Consenso, Taxas de Execução e MEV (Maximal Extractable Value).">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Fundamentação Teórica (2/4)</div>
+                    <h2 class="slide-title">Ecossistema DeFi & Economia do Staking PoS</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">🏗️ Arquitetura DeFi (Schär, 2021)</div>
+                    <ul class="card-list">
+                        <li><strong>Camada de Liquidação (Settlement):</strong> Blockchain Ethereum e token Ether (ETH).</li>
+                        <li><strong>Camada de Ativos (Asset Layer):</strong> Tokens nativos e derivativos de liquid staking (stETH).</li>
+                        <li><strong>Camada de Protocolos (Protocol Layer):</strong> Lido DAO, Uniswap, Curve, Aave.</li>
+                        <li><strong>Componibilidade ("Legos Financeiros"):</strong> Capacidade de utilizar derivativos como colateral em múltiplos protocolos.</li>
+                    </ul>
+                </div>
+                <div class="card gold">
+                    <div class="card-title">💰 Tripla Fonte de Rendimento em PoS</div>
+                    <ul class="card-list">
+                        <li><strong>1. Recompensas de Consenso:</strong> Emissão inflacionária do protocolo por propor e atestar blocos.</li>
+                        <li><strong>2. Priority Fees (Execução):</strong> Taxas pagas pelos usuários para priorizar transações.</li>
+                        <li><strong>3. MEV (Maximal Extractable Value):</strong> Receita adicional via reordenação estratégica de transações em blocos.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 7: FUNDAMENTAÇÃO - LIQUID STAKING & LIDO DAO -->
+        <section class="slide" data-notes="Detalhar o funcionamento da Lido DAO: recepção dos depósitos, emissão de stETH (1:1), cobrança de 10% de taxa sobre rendimentos e a mecânica de Rebasing diário do saldo em carteira.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Fundamentação Teórica (3/4)</div>
+                    <h2 class="slide-title">Liquid Staking & O Protocolo Lido DAO</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">🏊 Pool de Agregação da Lido DAO</div>
+                    <ul class="card-list">
+                        <li><strong>Fim da Trava de 32 ETH:</strong> Permite que investidores aportem qualquer fração de ETH (LIDO DAO, 2020).</li>
+                        <li><strong>Emissão Proporcional 1:1:</strong> O depositante recebe tokens stETH representativos do capital em custódia.</li>
+                        <li><strong>Delegação Profissional:</strong> A DAO distribui o stake entre mais de 30 operadores de nós auditados.</li>
+                        <li><strong>Taxa de Serviço de 10%:</strong> 5% repassados aos operadores de nós e 5% para a tesouraria da DAO.</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">🔄 Mecânica de Rebase do stETH</div>
+                    <ul class="card-list">
+                        <li><strong>Ajuste Diário de Saldo:</strong> A quantidade de tokens stETH na carteira do investidor aumenta diariamente para refletir os rendimentos.</li>
+                        <li><strong>Manutenção de Cotação Nominal:</strong> O mecanismo busca preservar 1 stETH = 1 ETH nominal.</li>
+                        <li><strong>Diferença para Reward-Bearing:</strong> Tokens como wstETH acumulam valor no preço; o stETH acumula valor no saldo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 8: FUNDAMENTAÇÃO - MATRIZ DE RISCOS -->
+        <section class="slide" data-notes="Apresentar a matriz dos 3 principais riscos do liquid staking: Risco de Contrato Inteligente, Risco de Depeg/Base no mercado secundário e Risco de Slashing Correlacionado do consenso PoS.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Fundamentação Teórica (4/4)</div>
+                    <h2 class="slide-title">Matriz de Riscos em Liquid Staking</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-3">
+                <div class="card navy">
+                    <div class="card-title">1. Smart Contracts</div>
+                    <ul class="card-list">
+                        <li>Vulnerabilidades e falhas lógicas em código Solidity (HARVEY et al., 2021).</li>
+                        <li>Auditorias externas (ChainSecurity) reduzem mas não anulam o risco.</li>
+                        <li>Imutabilidade impede reversão de perdas em exploits.</li>
+                    </ul>
+                </div>
+                <div class="card gold">
+                    <div class="card-title">2. Depeg (Risco de Base)</div>
+                    <ul class="card-list">
+                        <li>Divergência entre o preço do derivativo stETH e do ETH nativo (SCHARNOWSKI, 2025).</li>
+                        <li>Sensível a momentos de pânico e falta de liquidez no mercado secundário.</li>
+                        <li>Risco de liquidação em posições de empréstimo alavancado.</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">3. Slashing Correlacionado</div>
+                    <ul class="card-list">
+                        <li>Penalidades graves da rede por má conduta ou duplo voto de validadores (LIDO, 2020).</li>
+                        <li>Riscos correlacionados em falhas simultâneas de nós.</li>
+                        <li>Perda direta de capital estacado do pool compartilhada entre investidores.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 9: METODOLOGIA - CLASSIFICAÇÃO & DADOS -->
+        <section class="slide" data-notes="Explicar o enquadramento metodológico (exploratória/descritiva, quantitativa), o recorte temporal de Jan/2022 a Mai/2026 capturando cenários antes e depois do Shapella, e as bases de dados on-chain utilizadas.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Metodologia (1/2)</div>
+                    <h2 class="slide-title">Metodologia: Enquadramento & Dados Secundários</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">📋 Classificação da Pesquisa (ABNT)</div>
+                    <ul class="card-list">
+                        <li><strong>Natureza:</strong> Exploratória e Descritiva com abordagem quantitativa e análise documental.</li>
+                        <li><strong>Recorte Temporal (2022–2026):</strong> Abrange o Pré-Merge, episódios de depeg em 2022, atualização Shapella (2023), Dencun (2024) e maturidade LSDfi.</li>
+                        <li><strong>Isenção de CEP:</strong> Uso exclusivo de dados secundários públicos sem envolvimento de seres humanos.</li>
+                        <li><strong>Reprodutibilidade:</strong> Scripts em Python documentados e auditáveis.</li>
+                    </ul>
+                </div>
+                <div class="card teal">
+                    <div class="card-title">📊 Fontes de Dados Secundários On-Chain</div>
+                    <ul class="card-list">
+                        <li><strong>DefiLlama API:</strong> Séries diárias de preço stETH/ETH, TVL histórico, Market Share de LSDs e histórico de APR.</li>
+                        <li><strong>CoinGecko API:</strong> Cotações históricas em USD do Ether e volumes negociados.</li>
+                        <li><strong>Beaconcha.in API:</strong> Métricas da camada de consenso (Staking Ratio e validadores).</li>
+                        <li><strong>Dune Analytics:</strong> Painéis para validação das taxas de retorno do staking direto nativo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: METODOLOGIA - PYTHON & FORMULAÇÃO -->
+        <section class="slide" data-notes="Apresentar a arquitetura da esteira de automação Python (scripts 01 a 05) e explicitar as fórmulas matemáticas aplicadas para cálculo do Depeg %, Volatilidade Anualizada e Spread de Yield.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Metodologia (2/2)</div>
+                    <h2 class="slide-title">Esteira de Automação Python & Formulação de Métricas</h2>
+                </div>
+            </div>
+            <div class="slide-content grid-2">
+                <div class="card navy">
+                    <div class="card-title">🐍 Esteira de Scripts Python</div>
+                    <ul class="card-list">
+                        <li><code>01_coleta_depeg_steth_eth.py</code>: Coleta de preços e razão Ratio_t.</li>
+                        <li><code>02_coleta_preco_eth_usd.py</code>: Histórico de preços em USD.</li>
+                        <li><code>03_coleta_apr_lido.py</code>: Coleta de histórico de retorno APR/APY.</li>
+                        <li><code>04_tratamento_e_metricas.py</code>: Limpeza, alinhamento temporal e junção CSV.</li>
+                        <li><code>05_geracao_graficos_tabelas.py</code>: Compilação estatística e figuras de alta resolução.</li>
+                    </ul>
+                </div>
+                <div class="card gold">
+                    <div class="card-title">📐 Formulação Matemática</div>
+                    <div class="formula-box">
+                        <strong>1. Percentual de Depeg:</strong><br>
+                        \(Depeg_t = \left(\frac{P_{stETH,t} - P_{ETH,t}}{P_{ETH,t}}\right) \times 100\)
+                    </div>
+                    <div class="formula-box" style="border-left-color: #0E7490;">
+                        <strong>2. Volatilidade Anualizada:</strong><br>
+                        \(\sigma_{anual} = \sigma_{diario} \times \sqrt{365}\)
+                    </div>
+                    <div class="formula-box" style="border-left-color: #002B49;">
+                        <strong>3. Spread de Rendimento (ΔYield):</strong><br>
+                        \(\Delta Yield_t = APR_{stETH,t} - APR_{direto,t}\)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11: REFERÊNCIAS BIBLIOGRÁFICAS -->
+        <section class="slide" data-notes="Finalizar a apresentação exibindo as principais referências bibliográficas fundamentadas nas normas ABNT utilizadas no Projeto de TCC. Agradecer à banca examinadora e abrir espaço para perguntas.">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-tag">Referências (ABNT)</div>
+                    <h2 class="slide-title">Referências Bibliográficas</h2>
+                </div>
+            </div>
+            <div class="slide-content">
+                <div class="card navy" style="width: 100%;">
+                    <div class="card-title">📚 Principais Fontes Citadas</div>
+                    <ul class="card-list" style="font-size: 0.85rem; line-height: 1.4;">
+                        <li><strong>BINANCE RESEARCH.</strong> Data Insights: Liquid Staking and LSDfi Heat Up. Autoria de Keng Ying Sim. 2023.</li>
+                        <li><strong>BUTERIN, Vitalik.</strong> Ethereum: A Next-Generation Smart Contract and Decentralized Application Platform. Whitepaper, 2014.</li>
+                        <li><strong>CARRÉ, Sylvain; GABRIEL, Franck.</strong> Liquid Staking: When Does It Help? SSRN Electronic Journal, 2025.</li>
+                        <li><strong>CHAINSECURITY.</strong> Code Assessment of the LIP-23: Rebase Check Smart Contracts. Public report for Lido, 2024.</li>
+                        <li><strong>ETHEREUM FOUNDATION.</strong> A Fusão (The Merge). 2024. Disponível em: https://ethereum.org/pt-br/roadmap/merge/.</li>
+                        <li><strong>HARVEY, Campbell R.; RAMACHANDRAN, Ashwin; SANTORO, Joey.</strong> DeFi and the Future of Finance. Hoboken: John Wiley & Sons, 2021.</li>
+                        <li><strong>LIDO.</strong> Lido: Ethereum Liquid Staking. Whitepaper. Out. 2020. Disponível em: https://lido.fi/.</li>
+                        <li><strong>SCHARNOWSKI, Stefan; JAHANSHAHLOO, Hossein.</strong> The Economics of Liquid Staking Derivatives: Basis Determinants and Price Discovery. Journal of Futures Markets, v. 45, n. 1, p. 91–117, 2025.</li>
+                        <li><strong>SCHÄR, Fabian.</strong> Decentralized Finance: On Blockchain- and Smart Contract-Based Financial Markets. Federal Reserve Bank of St. Louis Review, v. 103, n. 2, p. 153–174, 2021.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Speaker Notes Panel -->
+    <div class="notes-panel" id="notesPanel">
+        <h4>🎙️ Notas do Orador (10-15 Minutos)</h4>
+        <p id="notesContent">Carregando notas do slide...</p>
+    </div>
+
+    <!-- Navigation & Toolbar -->
+    <footer class="controls-bar">
+        <div class="nav-buttons">
+            <button class="btn" id="prevBtn">⬅️ Anterior</button>
+            <button class="btn" id="nextBtn">Próximo ➡️</button>
+            <select class="btn" id="slideSelect" style="background-color: #1E293B; cursor: pointer;"></select>
+        </div>
+
+        <div class="slide-counter" id="slideCounter">
+            Slide 1 / 11
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn" id="toggleNotesBtn">🎙️ Notas do Orador</button>
+            <button class="btn" id="fullScreenBtn">⛶ Tela Cheia</button>
+            <button class="btn btn-primary" id="printBtn">🖨️ Exportar PDF</button>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

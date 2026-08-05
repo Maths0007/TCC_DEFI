@@ -1,0 +1,144 @@
+{
+  "metricas_depeg": {
+    "total_observacoes_dias": 1831,
+    "data_inicio": "2020-12-31",
+    "data_fim": "2026-07-26",
+    "preco_ratio_medio": 0.9951928181321682,
+    "preco_ratio_mediana": 0.998815,
+    "depeg_medio_pct": -0.4807181867831786,
+    "depeg_mediana_pct": -0.1185,
+    "depeg_desvio_padrao_pct": 2.149273405692653,
+    "depeg_minimo_pct": -21.7953,
+    "depeg_maximo_pct": 14.274,
+    "depeg_assimetria_skewness": -1.1534349718443364,
+    "depeg_curtose_kurtosis": 16.63827474359372,
+    "percentil_1_pct": -7.14952,
+    "percentil_5_pct": -3.8305,
+    "percentil_25_pct": -0.71915,
+    "percentil_75_pct": -0.006500000000000001,
+    "percentil_95_pct": 2.04465,
+    "percentil_99_pct": 6.326590000000002,
+    "dias_depeg_abaixo_minus_1pct": 396,
+    "dias_depeg_abaixo_minus_2pct": 251,
+    "dias_depeg_abaixo_minus_5pct": 53,
+    "dias_depeg_abaixo_minus_10pct": 11,
+    "pct_dias_depeg_abaixo_minus_2pct": 13.708356089568541,
+    "autocorrelacao_ar1": 0.16867868646356332,
+    "autocorrelacao_ar2": 0.1478353802713852,
+    "autocorrelacao_ar5": 0.12373389607447106
+  },
+  "pre_pos_shanghai": {
+    "pre_shanghai": {
+      "periodo": "2020-12-31 a 2023-04-12",
+      "dias": 755,
+      "depeg_medio_pct": -1.014407417218543,
+      "depeg_mediana_pct": -0.5712,
+      "desvio_padrao_pct": 2.778563544494478,
+      "depeg_minimo_pct": -21.7953,
+      "depeg_maximo_pct": 14.274,
+      "dias_depeg_abaixo_minus_2pct": 184,
+      "pct_dias_depeg_abaixo_minus_2pct": 24.370860927152318
+    },
+    "pos_shanghai": {
+      "periodo": "2023-04-13 a 2026-07-26",
+      "dias": 1076,
+      "depeg_medio_pct": -0.10624293680297398,
+      "depeg_mediana_pct": -0.06735,
+      "desvio_padrao_pct": 1.4519701502269478,
+      "depeg_minimo_pct": -13.0469,
+      "depeg_maximo_pct": 10.1497,
+      "dias_depeg_abaixo_minus_2pct": 67,
+      "pct_dias_depeg_abaixo_minus_2pct": 6.226765799256506
+    },
+    "teste_hipotese": {
+      "t_statistic": -8.227185525542355,
+      "p_value_diferenca_medias": 5.662623689965579e-16,
+      "f_statistic_variancia": 3.6620586065720904,
+      "p_value_diferenca_variancias": 4.628856490518254e-84,
+      "reducao_desvio_padrao_pct": 47.7438566015911
+    }
+  },
+  "eventos_estresse": [
+    {
+      "evento": "Crash Terra/LUNA (Maio 2022)",
+      "inicio": "2022-05-01",
+      "fim": "2022-05-31",
+      "dias_janela": 29,
+      "depeg_medio_pct": -1.8011,
+      "depeg_minimo_pct": -12.3277,
+      "depeg_maximo_pct": -0.0161,
+      "desvio_padrao_pct": 2.2241740677319815
+    },
+    {
+      "evento": "Insolvência Celsius / Depeg de Verão (Junho 2022)",
+      "inicio": "2022-06-01",
+      "fim": "2022-06-30",
+      "dias_janela": 26,
+      "depeg_medio_pct": -3.704688461538462,
+      "depeg_minimo_pct": -11.1644,
+      "depeg_maximo_pct": 3.2036,
+      "desvio_padrao_pct": 2.5940651690081995
+    },
+    {
+      "evento": "Colapso FTX (Novembro 2022)",
+      "inicio": "2022-11-01",
+      "fim": "2022-11-30",
+      "dias_janela": 26,
+      "depeg_medio_pct": -0.9051538461538461,
+      "depeg_minimo_pct": -4.5541,
+      "depeg_maximo_pct": 5.1924,
+      "desvio_padrao_pct": 1.6677404920984007
+    },
+    {
+      "evento": "Upgrade Shanghai / Saques (Abril 2023)",
+      "inicio": "2023-04-01",
+      "fim": "2023-04-30",
+      "dias_janela": 29,
+      "depeg_medio_pct": -0.2122241379310345,
+      "depeg_minimo_pct": -0.6623,
+      "depeg_maximo_pct": 0.819,
+      "desvio_padrao_pct": 0.2666399011711333
+    },
+    {
+      "evento": "Hack KelpDAO / Crise Restaking (Abril 2026)",
+      "inicio": "2026-04-15",
+      "fim": "2026-04-30",
+      "dias_janela": 14,
+      "depeg_medio_pct": -0.12850714285714285,
+      "depeg_minimo_pct": -0.8667,
+      "depeg_maximo_pct": 3.03,
+      "desvio_padrao_pct": 0.9444137379383007
+    }
+  ],
+  "metricas_rendimento_apr": {
+    "apr_lido_medio_pct": 3.468253790375742,
+    "apr_lido_mediana_pct": 3.14,
+    "apr_lido_desvio_padrao_pct": 1.0482526632306366,
+    "apr_lido_minimo_pct": 2.045,
+    "apr_lido_maximo_pct": 11.773,
+    "apr_direto_medio_pct": 3.8536153226397127,
+    "apr_direto_minimo_pct": 2.272222222222222,
+    "apr_direto_maximo_pct": 13.08111111111111,
+    "spread_taxa_lido_dao_medio_pct": 0.38536153226397124,
+    "spread_taxa_lido_dao_maximo_pct": 1.30811111111111,
+    "tracking_error_pct": 0.11647251813673737
+  },
+  "concentracao_market_share": {
+    "lido_share_atual_pct": 53.82,
+    "lido_tvl_atual_usd": 18197860758.97643,
+    "hhi_atual": 3480.9784000000004,
+    "lido_share_historico_medio_pct": 79.15638807429129,
+    "lido_share_historico_minimo_pct": 18.19,
+    "lido_share_historico_maximo_pct": 94.05,
+    "hhi_historico_medio": 6690.955714272273,
+    "hhi_historico_minimo": 4744.130258848183,
+    "hhi_historico_maximo": 10000.0,
+    "correlacao_share_vs_depeg": {
+      "observacoes_comuns": 1830,
+      "pearson_r": -0.08224943611427313,
+      "pearson_p_value": 0.00042818770201587307,
+      "spearman_r": -0.20795540982243677,
+      "spearman_p_value": 2.509058771314953e-19
+    }
+  }
+}
