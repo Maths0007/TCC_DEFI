@@ -5,18 +5,15 @@ venv/
 __pycache__/
 *.pyc
 
-# Exclude TCC text documents, literature notes, slides, docx, pdf
+# Exclude TCC text documents, literature notes, slides, docx
 texto_tcc/
 fichamentos/
-artigos_baixados/
-artigos_descartados/
-artigos_manter/
-artigos_selecionados_tcc/
 apresentacao/
 *.pptx
 *.docx
-*.pdf
-gerar_pptx.py
+
+# Environment credentials
+.env
 
 # Temporary Office / Windows files
 ~$*
