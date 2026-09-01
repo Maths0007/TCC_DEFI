@@ -126,7 +126,9 @@ $$\text{APR}_{\text{Consenso}, t} = \frac{C}{\sqrt{S_t}} = \frac{16632}{\sqrt{S_
 ### 4. Modelo de Retenção Contratual da Lido DAO
 
 $$\text{APR}_{\text{Direto}, t} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{1 - \tau} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{0{,}90}$$
+
 $$\Delta\text{APR}_t = \text{APR}_{\text{Direto}, t} - \text{APR}_{\text{Lido Líquido}, t} = \tau \cdot \text{APR}_{\text{Direto}, t}$$
+
 *onde $\tau = 0,10$ (10% de comissão retida pelo protocolo).*
 
 
