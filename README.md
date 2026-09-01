@@ -1,6 +1,5 @@
 # TCC — Engenharia de Dados e Análise Empírica: Lido DAO & Liquid Staking no Ethereum
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
 
 Repositório oficial contendo o código-fonte, a pipeline automatizada de coleta on-chain, os datasets consolidados em formato CSV, o relatório econométrico e as figuras acadêmicas em 300 DPI desenvolvidas para o Trabalho de Conclusão de Curso (TCC) em Finanças Descentralizadas (DeFi).
 
@@ -191,8 +190,4 @@ TCC_DEFI/
 
 ---
 
-### Opção B: Execução no Google Colab com 1 Clique (Nuvem)
 
-Clique no botão abaixo para abrir e executar o Jupyter Notebook com todas as coletas, métricas e gráficos diretamente na nuvem:
-
-👉 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
