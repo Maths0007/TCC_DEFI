@@ -29,7 +29,6 @@ flowchart TD
         M2b["<b>02b_coleta_mev_relay.py</b><br>• Extração diária de MEV<br>• Recompensas por bloco"]
         M3["<b>03_coleta_defillama_curve.py</b><br>• TVL Lido vs. TVL Ethereum<br>• Conversão APY -> APR diário<br>• Liquidez DEX Curve"]
         M4["<b>04_consolidar_dataset.py</b><br>• Grid temporal contínuo (zero gaps)<br>• Full Outer Join diário<br>• Cálculo do Delta APR & Spread<br>• Custo de oportunidade acumulado"]
-        M5["<b>05_gerar_graficos_tcc.py</b><br>• Renderização em 300 DPI<br>• Gráfico 1: Paridade & Depeg<br>• Gráfico 2: Curva de Retornos"]
         VAL["<b>validar_dados_tcc.py</b><br>• 20 testes de integridade<br>• Auditoria de achatamento<br>• Validação temporal rigorosa"]
     end
 
