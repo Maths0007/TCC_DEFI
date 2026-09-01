@@ -38,7 +38,6 @@ flowchart TD
         D3["<b>dados_defillama_curve.csv</b>"]
         D4["<b>dados_mev_relay.csv</b>"]
         MASTER["<b>dataset_master_tcc_2022_2026.csv</b><br><i>(1.488 linhas × 44 colunas)</i>"]
-        FIGS["<b>Graficos/ (300 DPI)</b><br>• grafico_01_paridade_depeg...png<br>• grafico_02_comparativo_apr...png<br>• Figuras 01 a 08 acadêmicas"]
         METRICS["<b>Metricas/</b><br>• relatorio_metricas_tcc.md<br>• resumo_metricas.json<br>• tabelas CSV estatísticas"]
     end
 
