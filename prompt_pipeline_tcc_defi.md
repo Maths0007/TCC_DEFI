@@ -129,4 +129,4 @@ Gere o código Python completo, funcional e documentado para cada um dos seguint
 - Trate exceções de rede HTTP (`try/except`, status codes, fallbacks e timeouts).
 - Exiba relatórios informativos de estatísticas descritivas (médias, mínimos, máximos e contagens) no terminal ao término da execução de cada módulo.
 ```
-### Foi usado o Claude Sonnet 5 via Claude terminal
+### Foi usado o Claude Sonnet 5 via Claude terminal e o Gemini 3.7 flash high via Antigravity Ide para refinar o código
