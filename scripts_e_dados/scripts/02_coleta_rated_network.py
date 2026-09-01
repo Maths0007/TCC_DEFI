@@ -190,12 +190,7 @@ def main():
 
     # Salvamento
     print("\n[3/3] Salvando dados_rated_consenso.csv...")
-    destinos = [
-        os.path.join(ROOT_DIR, "dados_rated_consenso.csv"),
-        os.path.join(DADOS_DIR, "dados_rated_consenso.csv"),
-        os.path.join(FILES_DIR, "dados_rated_consenso.csv"),
-        os.path.join(FILES_DIR, "scripts_e_dados", "Dados", "dados_rated_consenso.csv")
-    ]
+    destinos = [os.path.join(DADOS_DIR, "dados_rated_consenso.csv")]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)

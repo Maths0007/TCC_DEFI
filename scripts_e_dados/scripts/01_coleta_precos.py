@@ -218,12 +218,7 @@ def main():
 
     # 4. Salvamento em todas as pastas
     print("\n[4/4] Salvando dataset_precos_mercado.csv...")
-    destinos = [
-        os.path.join(ROOT_DIR, "dados_precos_mercado.csv"),
-        os.path.join(DADOS_DIR, "dados_precos_mercado.csv"),
-        os.path.join(FILES_DIR, "dados_precos_mercado.csv"),
-        os.path.join(FILES_DIR, "scripts_e_dados", "Dados", "dados_precos_mercado.csv")
-    ]
+    destinos = [os.path.join(DADOS_DIR, "dados_precos_mercado.csv")]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)

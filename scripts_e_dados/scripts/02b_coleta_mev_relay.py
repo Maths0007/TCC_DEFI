@@ -147,11 +147,7 @@ def main():
 
     # 3. Salvar
     print("\n[3/3] Salvando dados_mev_relay.csv...", flush=True)
-    destinos = [
-        os.path.join(ROOT_DIR, "dados_mev_relay.csv"),
-        os.path.join(DADOS_DIR, "dados_mev_relay.csv"),
-        os.path.join(ROOT_DIR, "scripts_e_dados", "scripts", "dados_mev_relay.csv")
-    ]
+    destinos = [os.path.join(DADOS_DIR, "dados_mev_relay.csv")]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)

@@ -85,12 +85,12 @@ def carregar_dataset_master() -> pd.DataFrame:
 
 
 def salvar_grafico(fig, nome_arquivo: str):
-    destinos = [
+    destinos = [os.path.join(DADOS_DIR, "destinos = [
         os.path.join(GRAFICOS_DIR, nome_arquivo),
         os.path.join(ROOT_DIR, nome_arquivo),
         os.path.join(FILES_DIR, nome_arquivo),
         os.path.join(FILES_DIR, "scripts_e_dados", "Graficos", nome_arquivo)
-    ]
+    ]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)

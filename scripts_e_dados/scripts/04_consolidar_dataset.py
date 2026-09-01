@@ -253,12 +253,7 @@ def main():
 
     # 4. Salvar Master Dataset
     print("\n[4/4] Salvando dataset_master_tcc_2022_2026.csv...")
-    destinos = [
-        os.path.join(ROOT_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(FILES_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(FILES_DIR, "scripts_e_dados", "Dados", "dataset_master_tcc_2022_2026.csv")
-    ]
+    destinos = [os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv")]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)

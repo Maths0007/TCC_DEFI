@@ -253,11 +253,7 @@ def main():
     assert df_final["tvl_rede_ethereum_total_usd"].mean() > 1e10, "[ERRO] TVL Total do Ethereum inconsistente!"
 
     # Salvar
-    destinos = [
-        os.path.join(ROOT_DIR, "dados_defillama_curve.csv"),
-        os.path.join(DADOS_DIR, "dados_defillama_curve.csv"),
-        os.path.join(ROOT_DIR, "scripts_e_dados", "scripts", "dados_defillama_curve.csv")
-    ]
+    destinos = [os.path.join(DADOS_DIR, "dados_defillama_curve.csv")]")]
 
     for d in destinos:
         os.makedirs(os.path.dirname(d), exist_ok=True)
