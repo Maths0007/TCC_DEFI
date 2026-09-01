@@ -59,8 +59,6 @@ flowchart TD
 
     M4 --> MASTER
     MASTER --> VAL
-    MASTER --> M5
-    M5 --> FIGS
     MASTER --> METRICS
 ```
 
