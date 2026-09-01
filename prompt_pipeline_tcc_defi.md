@@ -1,4 +1,5 @@
-# Prompt de Engenharia de Dados DeFi & Pipeline Quantitativo
+# Prompt de Engenharia de Dados DeFi & Pipeline Quantitativo 
+## Foi usado o Claude Fable 5 via Claude terminal
 
 > **Instruções de Uso:** Copie o bloco de texto abaixo e envie ao modelo de linguagem/assistente para gerar integralmente o pipeline modular de engenharia de dados, auditoria quantitativa e visualização acadêmica.
 
