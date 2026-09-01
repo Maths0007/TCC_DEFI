@@ -124,11 +124,11 @@ $$\text{APR}_{\text{Consenso}, t} = \frac{C}{\sqrt{S_t}} = \frac{16632}{\sqrt{S_
 *onde $S_t$ é o total de ETH depositado na camada de consenso.*
 
 ### 4. Modelo de Retenção Contratual da Lido DAO
-$$\text{APR}_{\text{Direto}, t} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{1 - \tau} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{0,90}$$
-$$\Delta\text{APR}_t = \text{APR}_{\text{Direto}, t} - \text{APR}_{\text{Lido Líquido}, t}$$
-*onde $\tau = 0,10$ (10% de comissão retida pelo protocolo).*
 
 $$\text{APR}_{\text{Direto}, t} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{1 - \tau} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{0{,}90}$$
+$$\Delta\text{APR}_t = \text{APR}_{\text{Direto}, t} - \text{APR}_{\text{Lido Líquido}, t} = \tau \cdot \text{APR}_{\text{Direto}, t}$$
+*onde $\tau = 0,10$ (10% de comissão retida pelo protocolo).*
+
 
 ### 5. Custo de Oportunidade Acumulado
 $$C_{\text{acum}, t} = \sum_{k=1}^t \left(\frac{\Delta\text{APR}_k}{365}\right)$$
