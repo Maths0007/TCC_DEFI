@@ -105,7 +105,7 @@ Este documento descreve detalhadamente a estrutura, metodologia de cálculo, fon
 |---|---|---|
 | `fonte_preco_eth` | String | Origem do preço do ETH (`yfinance_ETH-USD` / `defillama_coins`). |
 | `fonte_preco_steth` | String | Origem do preço do stETH (`yfinance_STETH-USD` / `defillama_coins`). |
-| `fonte_consenso` | String | Método de cálculo da taxa de consenso (`beacon_formula_16632_sqrt_S` / `rated_network_api`). |
+| `fonte_consenso` | String | Método de cálculo da taxa de consenso (`beacon_formula_16632_sqrt_S`). |
 | `qualidade_dado` | String | Validação de consistência do registro temporal (`modelo_teorico_e_real`). |
 
 ---
