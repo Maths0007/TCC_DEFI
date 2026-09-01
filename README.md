@@ -116,26 +116,11 @@ TCC_DEFI/
 ├── requirements.txt             # Dependências Python para instalação via pip / venv
 ├── .env.example                 # Modelo de configuração de chaves de API (opcional)
 │
-├── apresentacao/                # Slides e materiais da apresentação do TCC
-│   ├── Apresentacao_TCC_Matheus.pptx
-│   ├── gerar_pptx.py
-│   ├── index.html
-│   ├── script.js
-│   └── style.css
-│
 ├── artigos_cientificos/         # Biblioteca de artigos acadêmicos da literatura (PDFs)
 │   ├── selecionados/            # Os 10 artigos primários citados no texto do TCC
 │   ├── referencia/              # Artigos mantidos para fundamentação teórica
 │   ├── baixados/                # Acervo bibliográfico de apoio
 │   └── descartados/             # Artigos filtrados não utilizados
-│
-├── fichamentos/                 # Fichamentos e resumos analíticos em Markdown
-│
-├── texto_tcc/                   # Documentos de texto da monografia e formatação ABNT
-│   ├── TCC_Matheus.docx
-│   ├── TCC_Matheus_Revisado.docx
-│   ├── Metodologia_ABNT.docx
-│   └── format_abnt.py
 │
 ├── scripts_e_dados/             # PIPELINE OFICIAL E ATIVA (2022 - 2026)
 │   ├── scripts/                 # Módulos Python da pipeline quantitativa
