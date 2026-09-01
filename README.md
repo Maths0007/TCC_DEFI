@@ -30,8 +30,12 @@ TCC_DEFI/
 ├── fichamentos/                  # Fichamentos analíticos em Markdown dos artigos
 │
 ├── texto_tcc/                    # Minuta da monografia e arquivos de texto ABNT
+│   ├── TCC_Matheus.docx
+│   ├── TCC_Matheus_Revisado.docx
+│   ├── Metodologia_ABNT.docx
+│   └── format_abnt.py
 │
-├── scripts_e_dados/              # PIPELINE ATUAL EM FUNCIONAMENTO (2022 - 2026)
+├── scripts_e_dados/              # PIPELINE ATIVA E OFICIAL EM FUNCIONAMENTO (2022 - 2026)
 │   ├── scripts/                  # Scripts Python da pipeline master ativa
 │   │   ├── 01_coleta_precos.py          # Preços ETH/USD, retornos log e volatilidade
 │   │   ├── 02_coleta_rated_network.py   # Métricas da camada de consenso (Rated Network)
@@ -70,10 +74,7 @@ TCC_DEFI/
 │       ├── fig07_dispersao_market_share_vs_depeg.png
 │       └── fig08_indice_hhi_concentracao.png
 │
-└── arquivo_obsoleto/             # PASTA ÚNICA PARA SCRIPTS E TABELAS LEGADAS/OBSOLETAS
-    ├── scripts_legados/          # Versões anteriores de scripts
-    ├── dados_legados/            # CSVs antigos do recorte de 2020
-    └── rascunhos_texto/          # Rascunhos antigos de documentos
+└── obsoletos/                    # PASTA ÚNICA DEDICADA A SCRIPTS, TABELAS E RASCUNHOS LEGADOS
 ```
 
 ---
