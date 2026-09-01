@@ -128,5 +128,7 @@ $$\text{APR}_{\text{Direto}, t} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{1 
 $$\Delta\text{APR}_t = \text{APR}_{\text{Direto}, t} - \text{APR}_{\text{Lido Líquido}, t}$$
 *onde $\tau = 0,10$ (10% de comissão retida pelo protocolo).*
 
+$$\text{APR}_{\text{Direto}, t} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{1 - \tau} = \frac{\text{APR}_{\text{Lido Líquido}, t}}{0{,}90}$$
+
 ### 5. Custo de Oportunidade Acumulado
 $$C_{\text{acum}, t} = \sum_{k=1}^t \left(\frac{\Delta\text{APR}_k}{365}\right)$$
