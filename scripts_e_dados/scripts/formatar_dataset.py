@@ -1,17 +1,15 @@
 ﻿# -*- coding: utf-8 -*-
 """
-SCRIPT DE PADRONIZACAO E FORMATACAO DO MASTER DATASET DO TCC
-Tema: Financas Descentralizadas: A avaliacao do liquid staking via Lido DAO como alternativa de investimento em ativos digitais
-Recorte Temporal: 2022-05-05 a 2026-05-31 (Frequencia Diaria UTC)
+SCRIPT DE PADRONIZACAO E FORMATACAO DO MASTER DATASET DO TCC (100% EMPIRICO)
 """
 import os
 import numpy as np
 import pandas as pd
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DADOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Dados") if "scripts" not in ROOT_DIR else os.path.join(os.path.dirname(ROOT_DIR), "Dados")
 
 COLUNAS_DISCRETAS_INT = [
-    "slashing_eventos_qtd",
     "evento_terra_luna",
     "evento_merge",
     "evento_ftx",
@@ -43,17 +41,15 @@ ORDEM_COLUNAS_FINAL = [
     "total_staked_eth_network",
     "apy_lido_pct",
     "apr_base_nominal_pct",
-    "apy_pool_curve_pct",
-    "efetividade_operadores_lido_pct",
-    "slashing_eventos_qtd",
-    "slashing_volume_eth",
+    "tvl_rede_ethereum_total_usd",
     "tvl_lido_total_usd",
     "tvl_lido_ethereum_usd",
+    "dominancia_lido_tvl_defi_pct",
     "tvl_pool_curve_usd",
-    "reserva_eth_curve",
-    "reserva_steth_curve",
-    "ratio_reserva_steth_pct",
-    "volume_diario_curve_usd",
+    "apy_pool_curve_pct",
+    "tvl_yield_pool_usd",
+    "mev_valor_medio_bloco_eth",
+    "mev_total_diario_estimado_eth",
     "evento_terra_luna",
     "evento_merge",
     "evento_ftx",
@@ -62,7 +58,7 @@ ORDEM_COLUNAS_FINAL = [
     "fonte_preco_steth",
     "fonte_consenso",
     "qualidade_dado",
-    "reservas_curve_metodo"
+    "fonte_mev"
 ]
 
 def formatar_dataset(caminho_csv: str) -> pd.DataFrame:
@@ -70,61 +66,43 @@ def formatar_dataset(caminho_csv: str) -> pd.DataFrame:
     df["Date"] = pd.to_datetime(df["Date"]).dt.strftime("%Y-%m-%d")
     df = df.sort_values("Date").reset_index(drop=True)
 
-    df["preco_steth_eth"] = df["preco_steth_usd"] / df["preco_eth_usd"]
-    df["liquid_staking_basis"] = df["preco_steth_eth"] - 1.0
-    df["depeg_pct"] = df["liquid_staking_basis"] * 100.0
-
-    df["delta_apr_pct"] = df["apr_rede_direto_total_pct"] - df["apr_lido_liquido_pct"]
-    df["taxa_retencao_efetiva_pct"] = np.where(
-        df["apr_rede_direto_total_pct"] > 0,
-        (df["delta_apr_pct"] / df["apr_rede_direto_total_pct"]) * 100.0,
-        10.0
-    )
-    df["custo_oportunidade_diario_pct"] = df["delta_apr_pct"] / 365.0
-    df["custo_oportunidade_acumulado_pct"] = df["custo_oportunidade_diario_pct"].cumsum()
-
     for col in COLUNAS_DISCRETAS_INT:
         if col in df.columns:
             df[col] = df[col].fillna(0).astype(int)
 
     for col in df.columns:
-        if col in COLUNAS_DISCRETAS_INT or col in ["Date", "regime_ethereum", "fonte_preco_eth", "fonte_preco_steth", "fonte_consenso", "qualidade_dado", "reservas_curve_metodo"]:
+        if col in COLUNAS_DISCRETAS_INT or col in ["Date", "regime_ethereum", "fonte_preco_eth", "fonte_preco_steth", "fonte_consenso", "qualidade_dado", "fonte_mev"]:
             continue
-        elif "usd" in col or "reserva" in col or "tvl" in col or "volume" in col:
+        elif "usd" in col or "tvl" in col or "network" in col:
             df[col] = df[col].round(2)
-        elif "ratio" in col or "preco_steth_eth" in col or "retorno_log" in col or "volatilidade" in col or "basis" in col:
+        elif "preco_steth_eth" in col or "retorno_log" in col or "volatilidade" in col or "basis" in col or "mev_valor" in col:
             df[col] = df[col].round(6)
-        elif "pct" in col or "apr" in col or "apy" in col or "depeg" in col or "network" in col or "eth" in col:
+        elif "pct" in col or "apr" in col or "apy" in col or "depeg" in col:
             df[col] = df[col].round(4)
 
     cols_existentes = [c for c in ORDEM_COLUNAS_FINAL if c in df.columns]
-    outras_cols = [c for c in df.columns if c not in cols_existentes and "snapshot" not in c and "apy_reward" not in c]
-    df_formatado = df[cols_existentes + outras_cols]
+    df_formatado = df[cols_existentes]
     return df_formatado
 
 def main():
-    print("=" * 70)
-    print("PADRONIZANDO E FORMATANDO O MASTER DATASET EM TODOS OS DIRETORIOS")
-    print("=" * 70)
+    caminho_base = os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv")
+    if not os.path.exists(caminho_base):
+        caminho_base = os.path.join(ROOT_DIR, "dataset_master_tcc_2022_2026.csv")
 
-    caminho_base = os.path.join(ROOT_DIR, "dataset_master_tcc_2022_2026.csv")
     df = formatar_dataset(caminho_base)
 
     destinos = [
         os.path.join(ROOT_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(ROOT_DIR, "files", "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(ROOT_DIR, "scripts_e_dados", "Dados", "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(ROOT_DIR, "files", "scripts_e_dados", "Dados", "dataset_master_tcc_2022_2026.csv")
+        os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv"),
+        os.path.join(ROOT_DIR, "scripts_e_dados", "Dados", "dataset_master_tcc_2022_2026.csv")
     ]
 
-    for d in destinos:
+    for d in set(destinos):
         os.makedirs(os.path.dirname(d), exist_ok=True)
         df.to_csv(d, index=False)
         print(f"  [OK] Dataset salvo em: {d}")
 
-    print("\n" + "=" * 70)
     print(f"CONCLUIDO! Dataset padronizado com {len(df)} linhas e {len(df.columns)} colunas.")
-    print("=" * 70)
 
 if __name__ == "__main__":
     main()

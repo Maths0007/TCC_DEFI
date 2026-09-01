@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 MODULO 1: Coleta de Precos Historicos, Retornos, Volatilidade e Depeg (Basis)
 Tema TCC: Financas Descentralizadas: A avaliacao do liquid staking via Lido DAO como alternativa de investimento em ativos digitais
@@ -33,10 +33,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DADOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Dados")
-FILES_DIR = os.path.join(ROOT_DIR, "files")
+BASE_DIR = os.path.abspath(os.path.join(ROOT_DIR, ".."))
+DADOS_DIR = os.path.join(BASE_DIR, "Dados")
 os.makedirs(DADOS_DIR, exist_ok=True)
-os.makedirs(FILES_DIR, exist_ok=True)
 
 # RECORTE TEMPORAL ATUALIZADO
 DATA_INICIO = "2022-05-05"
@@ -216,14 +215,10 @@ def main():
     assert (df_mercado["preco_eth_usd"] > 0).all(), "[ERRO] Precos nulos ou negativos em ETH!"
     assert (df_mercado["preco_steth_usd"] > 0).all(), "[ERRO] Precos nulos ou negativos em stETH!"
 
-    # 4. Salvamento em todas as pastas
-    print("\n[4/4] Salvando dataset_precos_mercado.csv...")
-    destinos = [os.path.join(DADOS_DIR, "dados_precos_mercado.csv")]")]
-
-    for d in destinos:
-        os.makedirs(os.path.dirname(d), exist_ok=True)
-        df_mercado.to_csv(d, index=False)
-        print(f"  -> Salvo em: {d}")
+    # 4. Salvamento
+    destino = os.path.join(DADOS_DIR, "dados_precos_mercado.csv")
+    df_mercado.to_csv(destino, index=False)
+    print(f"  -> Salvo em: {destino}")
 
     # Estatisticas Descritivas Finais
     print("\n" + "-" * 70)

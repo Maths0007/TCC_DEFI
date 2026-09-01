@@ -1,31 +1,29 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
-MODULO 3: TVL, Yields e Reservas Historicas de DEX (DefiLlama & Curve)
+MODULO 3: TVL, Yields e Liquidez DEX da Pool Curve (DefiLlama)
 Tema TCC: Financas Descentralizadas: A avaliacao do liquid staking via Lido DAO como alternativa de investimento em ativos digitais
 Recorte Temporal: 2022-05-05 a 2026-05-31 (Frequencia Diaria UTC)
 
-Fontes:
+Fontes (100% Diretas e Empiricas):
   1. DefiLlama Charts Ethereum: https://api.llama.fi/charts/Ethereum
-     -> Serie historica diaria do TVL TOTAL da Rede Ethereum (DeFi global).
+     -> Serie historica diaria do TVL TOTAL do Ecossistema Ethereum.
   2. DefiLlama Protocol API: https://api.llama.fi/protocol/lido
      -> Serie historica diaria de TVL Total e TVL Ethereum da Lido DAO.
   3. DefiLlama Yields API (Pool Lido stETH): https://yields.llama.fi/chart/747c1d2a-c668-4682-b9f9-296708a3dd90
-     -> Historico diario de APY, APY Base, APY Rewards e TVL do pool.
+     -> Historico diario de APY e TVL reportados pelo oraculo da Lido.
   4. DefiLlama Yields API (Pool Curve stETH/ETH): https://yields.llama.fi/chart/57d30b9c-fc66-4ac2-b666-69ad5f410cce
-     -> Serie historica REAL do TVL e APY da pool Curve stETH/ETH.
+     -> Serie historica REAL e direta de TVL e APY da pool Curve stETH/ETH (sem modelagem sintetica de reservas).
 
 Metricas Calculadas:
-  1. tvl_rede_ethereum_total_usd: Valor Total Bloqueado em toda a rede Ethereum
-  2. tvl_lido_total_usd e tvl_lido_ethereum_usd: Valor Total Bloqueado no Lido
-  3. dominancia_lido_tvl_defi_pct: Participacao do Lido no TVL Total do Ethereum (% de dominancia)
-  4. apy_lido_pct e apr_base_nominal_pct: Conversao de APY composto para APR nominal diario
-  5. tvl_pool_curve_usd: TVL diario historico real na principal pool descentralizada
-  6. reserva_eth_curve e reserva_steth_curve: Saldos diarios estimados de ETH e stETH na pool
-  7. ratio_reserva_steth_pct: Proporcao de stETH na pool (sensivel a pressoes de depeg)
+  1. tvl_rede_ethereum_total_usd: Valor Total Bloqueado na rede Ethereum
+  2. tvl_lido_total_usd e tvl_lido_ethereum_usd: TVL da Lido DAO
+  3. dominancia_lido_tvl_defi_pct: Participacao do Lido no TVL Total do Ethereum (%)
+  4. apy_lido_pct e apr_base_nominal_pct: Rendimentos reais reportados e conversao para APR nominal
+  5. tvl_pool_curve_usd e apy_pool_curve_pct: TVL real da pool Curve stETH/ETH no mercado secundario
 
 Saidas:
-  - dados_defillama_curve.csv (diretorio raiz)
   - scripts_e_dados/Dados/dados_defillama_curve.csv
+  - dados_defillama_curve.csv
 """
 import os
 import sys
@@ -39,24 +37,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DADOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Dados")
+DADOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Dados") if "scripts" not in ROOT_DIR else os.path.join(os.path.dirname(ROOT_DIR), "Dados")
 os.makedirs(DADOS_DIR, exist_ok=True)
 
-# RECORTE TEMPORAL ATUALIZADO
 DATA_INICIO = "2022-05-05"
 DATA_FIM = "2026-05-31"
 
 LIDO_POOL_UUID = "747c1d2a-c668-4682-b9f9-296708a3dd90"
 CURVE_STETH_POOL_UUID = "57d30b9c-fc66-4ac2-b666-69ad5f410cce"
-
-
-def carregar_precos_mercado() -> pd.DataFrame:
-    """Carrega os precos diarios gerados no Modulo 1."""
-    caminho = os.path.join(ROOT_DIR, "dados_precos_mercado.csv")
-    if not os.path.exists(caminho):
-        caminho = os.path.join(DADOS_DIR, "dados_precos_mercado.csv")
-    df = pd.read_csv(caminho)
-    return df
 
 
 def fetch_ethereum_global_tvl() -> pd.DataFrame:
@@ -122,8 +110,6 @@ def fetch_lido_yields_history() -> pd.DataFrame:
                 records.append({
                     "Date": str(pt.get("timestamp", ""))[:10],
                     "apy_lido_pct": pt.get("apy"),
-                    "apy_base_pct": pt.get("apyBase"),
-                    "apy_reward_pct": pt.get("apyReward", 0.0),
                     "tvl_yield_pool_usd": pt.get("tvlUsd"),
                 })
             df = pd.DataFrame(records).dropna(subset=["Date"]).drop_duplicates(subset=["Date"])
@@ -135,7 +121,7 @@ def fetch_lido_yields_history() -> pd.DataFrame:
 
 
 def fetch_curve_steth_pool_history() -> pd.DataFrame:
-    """Coleta a serie historica REAL de TVL e APY da pool Curve stETH/ETH via DefiLlama."""
+    """Coleta a serie historica REAL e direta de TVL e APY da pool Curve stETH/ETH via DefiLlama."""
     print(f"  -> Buscando serie historica REAL do TVL da pool Curve stETH/ETH (Pool: {CURVE_STETH_POOL_UUID})...")
     url = f"https://yields.llama.fi/chart/{CURVE_STETH_POOL_UUID}"
     try:
@@ -159,8 +145,7 @@ def fetch_curve_steth_pool_history() -> pd.DataFrame:
 
 
 def processar_metricas_defillama_curve(df_eth_tvl: pd.DataFrame, df_tvl: pd.DataFrame,
-                                       df_yields: pd.DataFrame, df_curve: pd.DataFrame,
-                                       df_precos: pd.DataFrame) -> pd.DataFrame:
+                                       df_yields: pd.DataFrame, df_curve: pd.DataFrame) -> pd.DataFrame:
     grid_datas = pd.date_range(start=DATA_INICIO, end=DATA_FIM, freq="D").strftime("%Y-%m-%d")
     df_master = pd.DataFrame({"Date": grid_datas})
 
@@ -173,67 +158,38 @@ def processar_metricas_defillama_curve(df_eth_tvl: pd.DataFrame, df_tvl: pd.Data
     if not df_curve.empty:
         df_master = pd.merge(df_master, df_curve, on="Date", how="left")
 
-    df_master = pd.merge(df_master, df_precos[["Date", "preco_eth_usd", "preco_steth_usd", "depeg_pct"]], on="Date", how="left")
-
-    cols_interp = ["tvl_rede_ethereum_total_usd", "tvl_lido_total_usd", "tvl_lido_ethereum_usd", "apy_lido_pct", "apy_base_pct", "tvl_yield_pool_usd", "tvl_pool_curve_usd", "apy_pool_curve_pct"]
+    cols_interp = ["tvl_rede_ethereum_total_usd", "tvl_lido_total_usd", "tvl_lido_ethereum_usd", "apy_lido_pct", "tvl_yield_pool_usd", "tvl_pool_curve_usd", "apy_pool_curve_pct"]
     for c in cols_interp:
         if c in df_master.columns:
             df_master[c] = df_master[c].interpolate(method="linear").ffill().bfill()
 
-    if "apy_reward_pct" in df_master.columns:
-        df_master["apy_reward_pct"] = df_master["apy_reward_pct"].fillna(0.0)
-
-    # 1. Dominancia da Lido no TVL Total do Ecossistema Ethereum (%)
+    # Dominancia da Lido no TVL Total do Ecossistema Ethereum (%)
     df_master["dominancia_lido_tvl_defi_pct"] = (df_master["tvl_lido_ethereum_usd"] / df_master["tvl_rede_ethereum_total_usd"]) * 100.0
 
-    # 2. Conversao APY Composto -> APR Nominal Diario (n=365):
+    # Conversao APY Composto -> APR Nominal Diario (n=365):
     df_master["apr_base_nominal_pct"] = 365.0 * (
         np.power(1.0 + df_master["apy_lido_pct"] / 100.0, 1.0 / 365.0) - 1.0
     ) * 100.0
 
-    # 3. Dinamica das Reservas da Pool Curve stETH/ETH
-    k_sensibilidade = 3.65
-    df_master["ratio_reserva_steth_pct"] = np.clip(
-        50.5 - (k_sensibilidade * df_master["depeg_pct"]),
-        45.0, 78.0
-    )
-
-    ratio_steth_decimal = df_master["ratio_reserva_steth_pct"] / 100.0
-    ratio_eth_decimal = 1.0 - ratio_steth_decimal
-
-    df_master["reserva_steth_curve"] = (df_master["tvl_pool_curve_usd"] * ratio_steth_decimal) / df_master["preco_steth_usd"]
-    df_master["reserva_eth_curve"] = (df_master["tvl_pool_curve_usd"] * ratio_eth_decimal) / df_master["preco_eth_usd"]
-    df_master["volume_diario_curve_usd"] = df_master["tvl_pool_curve_usd"] * 0.035
-    df_master["reservas_curve_metodo"] = "modelo_invariante_stableswap"
-
-    # Arredondamentos
+    # Arredondamentos rigorosos
     df_master["tvl_rede_ethereum_total_usd"] = df_master["tvl_rede_ethereum_total_usd"].round(2)
     df_master["tvl_lido_total_usd"] = df_master["tvl_lido_total_usd"].round(2)
     df_master["tvl_lido_ethereum_usd"] = df_master["tvl_lido_ethereum_usd"].round(2)
     df_master["dominancia_lido_tvl_defi_pct"] = df_master["dominancia_lido_tvl_defi_pct"].round(4)
     df_master["tvl_yield_pool_usd"] = df_master["tvl_yield_pool_usd"].round(2)
     df_master["tvl_pool_curve_usd"] = df_master["tvl_pool_curve_usd"].round(2)
-    df_master["reserva_eth_curve"] = df_master["reserva_eth_curve"].round(2)
-    df_master["reserva_steth_curve"] = df_master["reserva_steth_curve"].round(2)
-    df_master["volume_diario_curve_usd"] = df_master["volume_diario_curve_usd"].round(2)
-    df_master["ratio_reserva_steth_pct"] = df_master["ratio_reserva_steth_pct"].round(4)
     df_master["apy_lido_pct"] = df_master["apy_lido_pct"].round(4)
-    df_master["apy_base_pct"] = df_master["apy_base_pct"].round(4)
     df_master["apr_base_nominal_pct"] = df_master["apr_base_nominal_pct"].round(4)
     df_master["apy_pool_curve_pct"] = df_master["apy_pool_curve_pct"].round(4)
 
-    df_master = df_master.drop(columns=["preco_eth_usd", "preco_steth_usd", "depeg_pct"], errors="ignore")
     return df_master
 
 
 def main():
     print("=" * 70)
-    print("MODULO 3: TVL, Yields e Reservas Historicas de DEX (DefiLlama & Curve)")
+    print("MODULO 3: TVL, Yields e Liquidez DEX da Pool Curve (DefiLlama)")
     print(f"Recorte Temporal: {DATA_INICIO} a {DATA_FIM} (Diario UTC)")
-    print(f"Execucao: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC")
     print("=" * 70)
-
-    df_precos = carregar_precos_mercado()
 
     print("\n[1/4] Coletando TVL Global do Ecossistema Ethereum...")
     df_eth_tvl = fetch_ethereum_global_tvl()
@@ -246,27 +202,24 @@ def main():
     df_curve = fetch_curve_steth_pool_history()
 
     print("\n[4/4] Processando consolidacao e dominancia de TVL...")
-    df_final = processar_metricas_defillama_curve(df_eth_tvl, df_tvl, df_yields, df_curve, df_precos)
+    df_final = processar_metricas_defillama_curve(df_eth_tvl, df_tvl, df_yields, df_curve)
 
     # Validacoes
     assert len(df_final) == 1488, f"Esperado 1488 dias, obtido {len(df_final)}"
     assert df_final["tvl_rede_ethereum_total_usd"].mean() > 1e10, "[ERRO] TVL Total do Ethereum inconsistente!"
 
     # Salvar
-    destinos = [os.path.join(DADOS_DIR, "dados_defillama_curve.csv")]")]
-
-    for d in destinos:
-        os.makedirs(os.path.dirname(d), exist_ok=True)
-        df_final.to_csv(d, index=False)
-        print(f"  -> Salvo em: {d}")
+    destino = os.path.join(DADOS_DIR, "dados_defillama_curve.csv")
+    df_final.to_csv(destino, index=False)
+    print(f"  -> Salvo em: {destino}")
 
     print("\n" + "-" * 70)
     print("RESUMO ESTATISTICO DE TVL E LIQUIDEZ (2022-05-05 a 2026-05-31):")
     print(f"  -> Total de Observacoes: {len(df_final)} dias")
     print(f"  -> TVL Total Rede Ethereum Medio: ${df_final['tvl_rede_ethereum_total_usd'].mean():,.2f}")
     print(f"  -> TVL Lido Ethereum Medio:       ${df_final['tvl_lido_ethereum_usd'].mean():,.2f}")
-    print(f"  -> Dominancia Media Lido no TVL:  {df_final['dominancia_lido_tvl_defi_pct'].mean():.2f}% (Max: {df_final['dominancia_lido_tvl_defi_pct'].max():.2f}%)")
-    print(f"  -> TVL Medio Curve stETH:         ${df_final['tvl_pool_curve_usd'].mean():,.2f}")
+    print(f"  -> Dominancia Media Lido no TVL:  {df_final['dominancia_lido_tvl_defi_pct'].mean():.2f}%")
+    print(f"  -> TVL Medio Curve stETH Real:    ${df_final['tvl_pool_curve_usd'].mean():,.2f}")
     print("=" * 70)
     print("MODULO 3 CONCLUIDO COM SUCESSO!\n")
 

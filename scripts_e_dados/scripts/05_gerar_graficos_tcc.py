@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 MODULO 5: Geracao de Figuras Academicas em Alta Resolucao (300 DPI)
 Tema TCC: Financas Descentralizadas: A avaliacao do liquid staking via Lido DAO como alternativa de investimento em ativos digitais
@@ -55,12 +55,12 @@ plt.rcParams.update({
     "grid.alpha": 0.75,
 })
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DADOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Dados")
-GRAFICOS_DIR = os.path.join(ROOT_DIR, "scripts_e_dados", "Graficos")
-FILES_DIR = os.path.join(ROOT_DIR, "files")
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.abspath(os.path.join(SCRIPTS_DIR, ".."))
+DADOS_DIR = os.path.join(BASE_DIR, "Dados")
+GRAFICOS_DIR = os.path.join(BASE_DIR, "Graficos")
+os.makedirs(DADOS_DIR, exist_ok=True)
 os.makedirs(GRAFICOS_DIR, exist_ok=True)
-os.makedirs(FILES_DIR, exist_ok=True)
 
 # RECORTE TEMPORAL ATUALIZADO
 DATA_INICIO = "2022-05-05"
@@ -68,35 +68,22 @@ DATA_FIM = "2026-05-31"
 
 
 def carregar_dataset_master() -> pd.DataFrame:
-    for local in [
-        os.path.join(ROOT_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv"),
-        os.path.join(FILES_DIR, "dataset_master_tcc_2022_2026.csv")
-    ]:
-        if os.path.exists(local):
-            df = pd.read_csv(local)
-            df["Date_dt"] = pd.to_datetime(df["Date"])
-            df = df[(df["Date_dt"] >= pd.to_datetime(DATA_INICIO)) & (df["Date_dt"] <= pd.to_datetime(DATA_FIM))]
-            df = df.sort_values("Date_dt").reset_index(drop=True)
-            return df
+    local = os.path.join(DADOS_DIR, "dataset_master_tcc_2022_2026.csv")
+    if os.path.exists(local):
+        df = pd.read_csv(local)
+        df["Date_dt"] = pd.to_datetime(df["Date"])
+        df = df[(df["Date_dt"] >= pd.to_datetime(DATA_INICIO)) & (df["Date_dt"] <= pd.to_datetime(DATA_FIM))]
+        df = df.sort_values("Date_dt").reset_index(drop=True)
+        return df
 
-    print(f"  [ERRO] Dataset master nao encontrado. Execute 04_consolidar_dataset.py primeiro!")
+    print(f"  [ERRO] Dataset master nao encontrado em {local}!")
     sys.exit(1)
 
 
 def salvar_grafico(fig, nome_arquivo: str):
-    destinos = [os.path.join(DADOS_DIR, "destinos = [
-        os.path.join(GRAFICOS_DIR, nome_arquivo),
-        os.path.join(ROOT_DIR, nome_arquivo),
-        os.path.join(FILES_DIR, nome_arquivo),
-        os.path.join(FILES_DIR, "scripts_e_dados", "Graficos", nome_arquivo)
-    ]")]
-
-    for d in destinos:
-        os.makedirs(os.path.dirname(d), exist_ok=True)
-        fig.savefig(d, dpi=300, bbox_inches="tight")
-        print(f"  [OK] 300 DPI salvo em: {d}")
-
+    destino = os.path.join(GRAFICOS_DIR, nome_arquivo)
+    fig.savefig(destino, dpi=300, bbox_inches="tight")
+    print(f"  [OK] 300 DPI salvo em: {destino}")
     plt.close(fig)
 
 
