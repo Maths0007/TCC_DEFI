@@ -40,7 +40,6 @@ TCC_DEFI/
 ├── artigos/                           # 📚 BASE BIBLIOGRÁFICA E ARTIGOS CITADOS NO TCC
 │   ├── INDICE_DE_ARTIGOS.md           # Catálogo com tabela ABNT de todas as 13 obras citadas
 │   ├── artigos_usados_no_tcc/         # PDFs dos artigos e whitepapers utilizados no texto
-│   └── fichamentos/                   # Fichamentos e resumos analíticos em Markdown
 │
 ├── scripts_e_dados/
 │   ├── scripts/                       # ⚙️ TODOS OS SCRIPTS EM PYTHON DO PROJETO
