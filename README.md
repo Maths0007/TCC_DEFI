@@ -37,6 +37,11 @@ TCC_DEFI/
 │   ├── apr/                           # Dados brutos de rendimento da rede (ETH.STORE)
 │   └── staking/                       # Dados brutos de validação da Beacon Chain
 │
+├── artigos/                           # 📚 BASE BIBLIOGRÁFICA E ARTIGOS CITADOS NO TCC
+│   ├── INDICE_DE_ARTIGOS.md           # Catálogo com tabela ABNT de todas as 13 obras citadas
+│   ├── artigos_usados_no_tcc/         # PDFs dos artigos e whitepapers utilizados no texto
+│   └── fichamentos/                   # Fichamentos e resumos analíticos em Markdown
+│
 ├── scripts_e_dados/
 │   ├── scripts/                       # ⚙️ TODOS OS SCRIPTS EM PYTHON DO PROJETO
 │   │   ├── comum_tcc.py               # Constantes, calendário UTC (Maio/22 a Maio/26) e utilitários
@@ -230,14 +235,26 @@ O repositório inclui os recursos de apoio para a banca examinadora na pasta [`a
 
 ---
 
-## 📚 9. Referências Bibliográficas Selecionadas
+## 📚 9. Referências Bibliográficas e Artigos do TCC
 
+Todas as 13 fontes primárias, artigos científicos e whitepapers citados no texto da monografia estão disponíveis na pasta [`artigos/artigos_usados_no_tcc/`](file:///d:/TCC_DEFI/artigos/artigos_usados_no_tcc), acompanhados de seus respectivos resumos analíticos em [`artigos/fichamentos/`](file:///d:/TCC_DEFI/artigos/fichamentos).
+
+> 📖 **Consulte o catálogo completo:** [`artigos/INDICE_DE_ARTIGOS.md`](file:///d:/TCC_DEFI/artigos/INDICE_DE_ARTIGOS.md)
+
+Principais referências citadas no texto:
 - **BUTERIN, V.** *Ethereum: A Next-Generation Smart Contract and Decentralized Application Platform*. Whitepaper, 2014.
 - **CARRÉ, S.; GABRIEL, F.** *Liquid Staking: When Does It Help?* SSRN Electronic Journal, 2025.
+- **CINTRA, T. N.; HOLLOWAY, M. P.** *Detecting Depegs: Towards Safer Passive Liquidity Provision on Curve Finance*. arXiv:2306.10612, 2023.
+- **CONG, L. W.; HE, Z.; TANG, K.** *The Tokenomics of Staking*. NBER Working Paper 33640, 2025.
 - **HARVEY, C. R.; RAMACHANDRAN, A.; SANTORO, J.** *DeFi and the Future of Finance*. Hoboken: John Wiley & Sons, 2021.
+- **JIN, M.; LIU, R.; MONPERRUS, M.** *On-Chain Analysis of Smart Contract Dependency Risks on Ethereum*. arXiv:2503.19548, 2025.
 - **LIDO DAO.** *Lido: Ethereum Liquid Staking*. Whitepaper, 2020. Disponível em: <https://lido.fi/>.
+- **LIM, K. Y.** *KelpDAO Exploit Analysis and Restaking Protocol Risks*. Binance Research, 2026.
+- **MAKAROV, I.; SCHOAR, A.** *Cryptocurrencies and Decentralized Finance (DeFi)*. Brookings / NBER, 2022.
+- **NABBEN, K.; DE FILIPPI, P.** *Governance of Decentralized Autonomous Organizations*. SSRN, 2024.
 - **SCHARNOWSKI, S.; JAHANSHAHLOO, H.** *The Economics of Liquid Staking Derivatives: Basis Determinants and Price Discovery*. Journal of Futures Markets, v. 45, n. 1, p. 91–117, 2025.
 - **SCHÄR, F.** *Decentralized Finance: On Blockchain- and Smart Contract-Based Financial Markets*. Federal Reserve Bank of St. Louis Review, v. 103, n. 2, p. 153–174, 2021.
+- **XIONG, X. et al.** *Leverage Staking with Liquid Staking Derivatives (LSDs): Opportunities and Risks*. arXiv:2401.08610, 2024.
 
 ---
 

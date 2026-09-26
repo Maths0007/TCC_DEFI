@@ -5,18 +5,28 @@ venv/
 __pycache__/
 *.pyc
 
-# Exclude TCC text documents, literature notes, slides, docx, pdf
+# Exclude local drafts, office files and unwhitelisted PDFs
 texto_tcc/
-fichamentos/
-artigos_baixados/
-artigos_descartados/
-artigos_manter/
-artigos_selecionados_tcc/
 apresentacao/
 *.pptx
 *.docx
 *.pdf
 gerar_pptx.py
+
+# Local raw downloads, discarded drafts and legacy directories
+/artigos_baixados/
+/artigos_descartados/
+/artigos_manter/
+/artigos_selecionados_tcc/
+/artigos_novos/
+/artigos_selecionados/
+/fichamentos/
+
+# Whitelist articles used in the TCC text and analytical fichamentos
+!artigos/
+!artigos/**
+!artigos/artigos_usados_no_tcc/*.pdf
+!artigos/fichamentos/*.md
 
 # Temporary Office / Windows files & Archives
 ~$*
@@ -28,8 +38,6 @@ gerar_pptx.py
 # Local backups and cache
 scripts_e_dados_backup_legado/
 cache/
-artigos_novos/
-artigos_selecionados/
 
 # IDE / Antigravity
 .idea/
