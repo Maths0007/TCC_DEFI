@@ -260,4 +260,3 @@ Principais referências citadas no texto:
 ## 📄 10. Licença e Direitos Autorais
 
 Este projeto foi desenvolvido para fins estritamente acadêmicos e científicos no âmbito da Universidade Federal de Campina Grande (UFCG).  
-Código e datasets disponibilizados sob a licença [MIT](LICENSE).
