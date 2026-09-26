@@ -1,0 +1,80 @@
+APR ETH.STORE — DADOS PARA O TCC
+Período por data de início: 01/04/2022 a 31/05/2026, inclusive.
+Fonte declarada: Beaconcha.in, ETH.STORE.
+URL: https://www.beaconcha.in/ethstore
+HTML fornecido pelo pesquisador em 25/09/2026. A fonte original está preservada
+neste pacote, sem alterações de conteúdo.
+
+DEFINIÇÃO DA VARIÁVEL
+A série ETH.STORE é uma taxa de retorno anualizada a partir das recompensas
+de um período de 24 horas. A anualização é simples, sem capitalização:
+APR (% a.a.) = recompensas do período / saldo efetivo elegível * 365 * 100.
+É uma observação diária de taxa anualizada, não o rendimento efetivo diário
+nem o retorno realizado de um investimento durante um ano. Não é APY.
+Exemplo: 5.009 no CSV significa 5,009% ao ano; não significa 500,9% nem 5,009% ao dia.
+Não representa necessariamente a rentabilidade líquida recebida por um cliente
+de plataforma, pois taxas e condições de cada serviço podem diferir.
+
+MÉTODO DECLARADO NO HTML
+O período começa às 12:00:23 UTC e dura 24 horas (225 épocas da Beacon Chain).
+A população considera validadores ativos durante o período inteiro. O texto
+da página exclui aqueles que entram ou saem no decorrer do período e aqueles
+cujo saldo efetivo muda durante o dia. O denominador é o saldo efetivo elegível
+no início do período. A página descreve recompensas de consenso e taxas de
+transação como componentes das recompensas totais.
+A definição documentada na página foi registrada; não foi auditada a eventual
+aplicação retroativa de cada regra ao histórico inteiro.
+
+DATAS E ALINHAMENTO
+O CSV usa a data de INÍCIO do período da fonte, sem deslocar observações.
+Assim, a observação de 31/05/2026 corresponde ao intervalo que começa em
+31/05/2026 às 12:00:23 UTC e termina imediatamente antes de 01/06/2026 às
+12:00:23 UTC. Não equivale ao dia civil de 00:00 a 23:59:59 UTC.
+Ao combinar com preços, staking ou outras variáveis diárias, documentar essa
+diferença. Não usar o APR deste dia como informação já conhecida na abertura
+desse mesmo dia em uma análise preditiva.
+
+DICIONÁRIO DO CSV
+Codificação UTF-8, separador vírgula, separador decimal ponto.
+data_inicio_periodo_utc: data do início do período, formato AAAA-MM-DD.
+apr_ethstore_percentual_aa: taxa anualizada publicada, em percentual ao ano.
+inicio_periodo_utc: timestamp de início em ISO 8601, com fuso UTC.
+timestamp_fonte_ms: timestamp original Unix em milissegundos.
+recompensas_periodo_eth: recompensas da população elegível durante o período, em ETH.
+saldo_efetivo_ethstore_eth: denominador da fórmula ETH.STORE, em ETH.
+Este último campo não deve ser substituído automaticamente pela série Staked
+ETH extraída anteriormente: a população e a referência temporal podem diferir.
+
+VALIDAÇÃO REALIZADA
+1.522 registros; nenhuma data ausente ou duplicada no período solicitado.
+Três séries extraídas do HTML: ETH.STORE, Total Staking Rewards e Total Effective Balance.
+Valores numéricos finitos; denominadores positivos.
+Todos os 1.522 APRs foram confrontados com a fórmula publicada usando as
+outras duas séries. Nenhum erro superior a 0,000501 ponto percentual.
+Erro máximo: 0,000499855001468319 ponto percentual, compatível com a taxa
+publicada com três casas decimais. Os valores publicados foram mantidos.
+01/04/2022: 5,009% a.a.; 31/05/2026: 2,720% a.a.
+Sem interpolação, preenchimento ou mistura de fontes.
+
+ALCANCE DA VALIDAÇÃO
+Dados secundários extraídos do HTML fornecido pelo pesquisador como código da
+página oficial. Confirmadas a integridade estrutural e a consistência interna
+da fórmula. Não se trata de auditoria independente de todos os dados on-chain.
+Consistência interna não comprova, isoladamente, a exatidão dos insumos originais.
+
+REPRODUÇÃO
+Requer somente Python 3, sem bibliotecas externas. Extraia este ZIP e execute:
+python extrair_apr_ethstore.py fonte_ethstore.html --saida nova_extracao
+O CSV resultante deve ter o SHA-256 registrado em validacao_apr.json.
+O horário de processamento no relatório mudará entre execuções.
+
+ARQUIVOS
+apr_ethstore_2022-04_2026-05.csv: dados do período.
+fonte_ethstore.html: HTML original recebido.
+extrair_apr_ethstore.py: código de extração e conferência da fórmula.
+validacao_apr.json: relatório técnico e hashes dos arquivos.
+LEIA-ME_metodologia.txt: este documento.
+
+REFERÊNCIA SUGERIDA — adaptar às normas da instituição
+BEACONCHA.IN. ETH.STORE Statistics. Disponível em:
+https://www.beaconcha.in/ethstore. Acesso em: 25 set. 2026.

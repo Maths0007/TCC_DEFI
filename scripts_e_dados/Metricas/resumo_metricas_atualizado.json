@@ -1,0 +1,33 @@
+{
+  "periodo_inicio": "2022-05-01",
+  "periodo_fim": "2026-05-31",
+  "total_dias": 1492,
+  "depeg_medio_pct": -0.512653418230563,
+  "depeg_mediano_pct": -0.1267,
+  "depeg_std_pct": 0.9738531753320607,
+  "depeg_min_pct": -6.3263,
+  "depeg_max_pct": 1.0851,
+  "depeg_p01_pct": -3.995755,
+  "depeg_p05_pct": -2.80062,
+  "depeg_p25_pct": -0.4229,
+  "depeg_p75_pct": -0.027375,
+  "depeg_p95_pct": 0.10783500000000001,
+  "depeg_p99_pct": 0.31645199999999973,
+  "shanghai": {
+    "pre_dias": 347,
+    "pre_media_pct": -1.8218014409221903,
+    "pre_std_pct": 1.3085438406774137,
+    "pos_dias": 1145,
+    "pos_media_pct": -0.11590724890829694,
+    "pos_std_pct": 0.20194466624642363,
+    "reducao_volatilidade_pct": 84.56722197844897
+  },
+  "staking": {
+    "eth_inicial": 11625590.0,
+    "eth_final": 39255940.0,
+    "crescimento_staking_pct": 237.66836779896764,
+    "apr_medio_pct": 3.7505603217158177,
+    "apr_min_pct": 2.536,
+    "apr_max_pct": 8.618
+  }
+}

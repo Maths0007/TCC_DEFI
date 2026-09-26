@@ -1,0 +1,23 @@
+{
+  "arquivo": "dados_beaconchain.csv",
+  "sha256": "c7d8e0c387c3497a81caefa9e46faeb006b2e271e34a0f22fbed75e414b80f71",
+  "fontes": {
+    "descricao": "Fontes extraÃ­das dos dois ZIPs fornecidos pelo pesquisador; arquivos preservados byte a byte.",
+    "sha256": {
+      "apr/LEIA-ME_metodologia.txt": "c548c926f534e42e6d7091d040df6830032fd3533da5ba242bbb59d236bada1b",
+      "apr/apr_ethstore_2022-04_2026-05.csv": "8933834f9014c2b07e62059bc886e935b4eb0d1e45ed452354ae498d5d27862d",
+      "apr/extrair_apr_ethstore.py": "b49ca9bf9da3ebc5346fd01cd2741423d18cec5c1e4413134aac75054201bd74",
+      "apr/fonte_ethstore.html": "f8bd9d9d1ed12ab95c3af0dc314dc43a0ee78cc4c4bd64e0dd8bdb4ee973c6a9",
+      "apr/validacao_apr.json": "0a4cc254762657746d7911a2757129189c0c106a9b733af5f316ba5208e9334b",
+      "staking/LEIA-ME_metodologia.txt": "be12b0c4c7a3bcfc4e6aedcb82f0c7b4c157ba1ab6250cfbbd9c5bc5096b4a5f",
+      "staking/eth_staking_beaconchain_2022-04_2026-05.csv": "04599939060d64f65304388ea9b46377cafe56240abc852a6607614d351db4fe",
+      "staking/extrair_staking_beaconchain.py": "1c77441704e1768f2c700229afd0d2a6fc06af02be1013cf274e57289606d104",
+      "staking/fonte_beaconchain.html": "5a43097b1e3d07db5533ec814a7ff2fc5704f33836d33d9374d7e04fdb55a33f",
+      "staking/validacao_extracao.json": "0cfd599a742a6b3c85542adfcc73c2cb8c08ccc24185045a050531e218849f8f"
+    }
+  },
+  "linhas": 1492,
+  "inicio": "2022-05-01",
+  "fim": "2026-05-31",
+  "gerado_em_utc": "2026-09-26T02:15:36.444428+00:00"
+}

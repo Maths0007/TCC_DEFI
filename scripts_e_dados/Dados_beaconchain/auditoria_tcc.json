@@ -1,0 +1,155 @@
+{
+  "aprovado": true,
+  "aprovado_integridade": true,
+  "completude_exigida": false,
+  "aprovado_completude": null,
+  "colunas_completude_exigidas": [],
+  "erros": [],
+  "cobertura": {
+    "Date": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "total_staked_eth_network": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "apr_rede_ethstore_pct": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "preco_eth_usd": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "preco_steth_usd": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "preco_steth_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "depeg_pct": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "retorno_log_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "retorno_log_steth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "volatilidade_30d_anual_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "volatilidade_30d_anual_steth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "apr_lido_liquido_pct": {
+      "observados": 0,
+      "ausentes": 1492
+    },
+    "delta_apr_pp": {
+      "observados": 0,
+      "ausentes": 1492
+    },
+    "timestamp_staking_fonte_ms": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "inicio_periodo_ethstore_utc": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "timestamp_ethstore_fonte_ms": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "recompensas_ethstore_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "saldo_efetivo_elegivel_ethstore_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "fim_periodo_ethstore_utc": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "fonte_staking": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "fonte_apr_rede": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "qualidade_staking_apr": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "staking_igual_dia_anterior": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "apr_rede_direto_total_pct": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "inicio_periodo_lido_utc": {
+      "observados": 0,
+      "ausentes": 1492
+    },
+    "fim_periodo_lido_utc": {
+      "observados": 0,
+      "ausentes": 1492
+    },
+    "fonte_apr_lido": {
+      "observados": 0,
+      "ausentes": 1492
+    },
+    "status_apr_lido": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "fonte_preco_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "volatilidade_7d_anual_eth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "fonte_preco_steth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "volatilidade_7d_anual_steth": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "liquid_staking_basis": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "comparacao_apr_alinhada": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "escopo_dataset": {
+      "observados": 1492,
+      "ausentes": 0
+    },
+    "status_comparacao_apr": {
+      "observados": 1492,
+      "ausentes": 0
+    }
+  },
+  "limite": "Consistência interna e fidelidade à extração; não auditoria independente da blockchain. Ausentes permanecem ausentes."
+}

@@ -1,0 +1,65 @@
+ETH EM STAKING — EXTRAÇÃO DO GRÁFICO BEACONCHA.IN
+Período: 01/04/2022 a 31/05/2026, inclusive.
+Processamento: 25/09/2026.
+
+ORIGEM E DEFINIÇÃO
+O arquivo HTML foi fornecido pelo usuário após salvar o código-fonte da página
+https://beaconcha.in/charts/staked_ether. O HTML declara essa URL canônica e
+contém diretamente a série JSON chamada Staked ETH usada por Highcharts.
+A fonte descreve a variável como a soma dos saldos efetivos (Effective Balances).
+Esta é a definição operacional conservada na coluna eth_saldo_efetivo_fonte.
+Não é rentabilidade, valor em dólares ou depósitos acumulados.
+A descrição do HTML não explicita todos os critérios de inclusão de validadores,
+nem o horário de coleta ou eventual tratamento histórico pelo provedor.
+
+CONTEÚDO
+- eth_staking_beaconchain_2022-04_2026-05.csv: 1.522 observações diárias.
+- fonte_beaconchain.html: arquivo enviado pelo usuário, preservado byte a byte.
+- extrair_staking_beaconchain.py: código reproduzível, somente biblioteca padrão Python.
+- validacao_extracao.json: contagens, datas repetidas e hashes SHA-256 dos arquivos.
+
+DICIONÁRIO DO CSV
+Separador: vírgula; codificação: UTF-8.
+data_utc: rótulo de data no formato AAAA-MM-DD, derivado do timestamp em UTC.
+eth_saldo_efetivo_fonte: valor em ETH exatamente como publicado na série.
+timestamp_fonte_ms: timestamp original em milissegundos desde Unix epoch.
+Os timestamps são à meia-noite UTC. Isso não comprova que a observação foi feita
+nesse horário; pode ser apenas o rótulo usado para identificar cada dia.
+
+CHECAGENS REALIZADAS
+A série completa no HTML tem 2.124 pontos de 01/12/2020 a 24/09/2026.
+No período solicitado: 1.522 dias esperados, 1.522 linhas, zero lacunas e
+zero datas duplicadas. Os valores são numéricos, finitos e positivos.
+Todos os 1.522 valores do CSV foram comparados aos pares originais do HTML:
+nenhuma diferença. Não houve interpolação, preenchimento ou arredondamento.
+01/04/2022: 10.546.332 ETH; 31/05/2026: 39.255.940 ETH.
+
+RESSALVAS PARA O TCC
+Há 24 comparações entre dias consecutivos com valor idêntico. As sequências
+com três ou mais dias são:
+14/04/2023–19/04/2023: 6 dias, 17.972.763 ETH.
+22/04/2023–02/05/2023: 11 dias, 17.972.773 ETH.
+03/05/2023–06/05/2023: 4 dias, 17.972.776 ETH.
+Repetições não comprovam erro ou imputação. Sua causa não foi confirmada.
+Os trechos visualmente planos de 2025 têm variações numéricas no HTML:
+por exemplo, setembro/2025 contém 30 valores distintos em 30 dias.
+Não excluir nem substituir observações apenas por parecerem planas no gráfico.
+
+A validação realizada comprova fidelidade da extração ao arquivo recebido e
+integridade estrutural. Não constitui uma auditoria independente on-chain de
+cada observação. A página original não pôde ser acessada pelo navegador
+automatizado devido à verificação de segurança; a extração usa o HTML enviado.
+Para uso acadêmico, tratar como dados secundários publicados por Beaconcha.in,
+conservar a definição da fonte e declarar a limitação da validação.
+Nenhum dado do Kaggle, Validator Queue ou Staking Rewards foi misturado.
+
+REPRODUÇÃO
+Extraia este ZIP. Execute no terminal:
+python extrair_staking_beaconchain.py fonte_beaconchain.html --saida nova_extracao
+Compare o SHA-256 do CSV produzido com validacao_extracao.json. O relatório de
+nova execução terá um horário de processamento diferente, mas o CSV deve ser idêntico.
+
+REFERÊNCIA SUGERIDA (adaptar às normas da instituição)
+BEACONCHA.IN. Staked ETH Chart. Disponível em:
+https://beaconcha.in/charts/staked_ether. Acesso em: 25 set. 2026.
+Registro de procedência: HTML da página fornecido pelo pesquisador nesta data.

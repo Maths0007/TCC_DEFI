@@ -1,0 +1,12 @@
+{
+  "arquivo": "dataset_final_tcc.csv",
+  "sha256": "6f16f61ded030bd3d640da01c8872b09a6d5443fafe4ae0a5e3fbdaba8b8e167",
+  "fontes": [
+    "dados_rated_consenso.csv",
+    "dados_precos_mercado.csv"
+  ],
+  "linhas": 1492,
+  "inicio": "2022-05-01",
+  "fim": "2026-05-31",
+  "gerado_em_utc": "2026-09-26T02:15:39.638106+00:00"
+}

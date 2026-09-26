@@ -1,0 +1,11 @@
+{
+  "arquivo": "dados_rated_consenso.csv",
+  "sha256": "b7a79c7265e4ea83bbf01a10abc4ffa941290b677a90ca8d2edab6d4ee2f8460",
+  "fontes": [
+    "Beaconcha.in ETH.STORE; nome legado do arquivo conservado"
+  ],
+  "linhas": 1492,
+  "inicio": "2022-05-01",
+  "fim": "2026-05-31",
+  "gerado_em_utc": "2026-09-26T02:15:37.234096+00:00"
+}

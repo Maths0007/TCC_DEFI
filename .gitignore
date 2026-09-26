@@ -18,10 +18,18 @@ apresentacao/
 *.pdf
 gerar_pptx.py
 
-# Temporary Office / Windows files
+# Temporary Office / Windows files & Archives
 ~$*
 ~*.tmp
 *.tmp
+*.rar
+*.zip
+
+# Local backups and cache
+scripts_e_dados_backup_legado/
+cache/
+artigos_novos/
+artigos_selecionados/
 
 # IDE / Antigravity
 .idea/

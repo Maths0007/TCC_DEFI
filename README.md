@@ -2,144 +2,85 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
 
-Repositório oficial contendo os **scripts de coleta de dados**, **datasets brutos em CSV**, **métricas estatísticas/econométricas**, **gráficos acadêmicos (300 DPI)** e **Jupyter Notebook interativo para Google Colab** para a pesquisa de TCC sobre o protocolo **Lido DAO** e o token derivativo **stETH** no ecossistema Ethereum.
+Repositório oficial contendo a **pipeline auditada de dados**, **datasets organizados e intuitivos**, **fontes metodológicas com hashes SHA-256**, **métricas econométricas atualizadas**, **gráficos acadêmicos** e **Jupyter Notebook interativo para Google Colab** para a pesquisa de TCC sobre o protocolo **Lido DAO** e o token derivativo **stETH** no ecossistema Ethereum.
 
 ---
 
-## 📂 Estrutura do Repositório
+## 📂 Estrutura Intuitiva dos Dados e Scripts
 
 ```text
 TCC_DEFI/
+├── executar_pipeline.py          # Orquestrador oficial da pipeline
+├── testar_pipeline.py            # Bateria de testes de integridade e completude
+├── comum_tcc.py                  # Calendário (Maio/22 a Maio/26), caminhos e validação
+├── requirements.txt              # Dependências Python
 ├── notebook_tcc_lido_defi.ipynb  # Notebook interativo para Google Colab / Jupyter
-├── requirements.txt              # Arquivo de dependências Python para venv / pip
+├── fontes/                       # Dados brutos das fontes, metodologia e manifesto
+│   ├── manifesto.json            # Hashes SHA-256 de todas as fontes
+│   ├── apr/                      # HTML, extrator e metodologia ETH.STORE
+│   └── staking/                  # HTML, extrator e metodologia Beaconcha.in Staked Ether
+│
 └── scripts_e_dados/
-    ├── scripts/                  # Scripts em Python para coleta, análise e gráficos
-    │   ├── 01_coleta_precos.py    # Coleta de preços ETH/USD e razão stETH/ETH (DefiLlama)
-    │   ├── 02_coleta_apr.py       # Coleta do APY/APR histórico do Lido e Solo Staking
-    │   ├── 03_coleta_tvl_lsd.py   # Coleta do TVL, Staking Ratio e Market Share dos LSDs
-    │   ├── 04_gerar_metricas.py   # Cálculo de estatísticas descritivas, testes t/F e HHI
-    │   ├── 05_gerar_graficos.py   # Geração das 8 figuras acadêmicas em alta resolução (300 DPI)
-    │   ├── coletar_todos.py       # Pipeline orquestradora completa (Execução única)
-    │   └── utils.py               # Módulo de utilidades e chamadas de API
+    ├── DADOS_DO_TCC/             # 🌟 PASTA PRINCIPAL DE DADOS (LIMPOS E INTUITIVOS)
+    │   ├── dataset_consolidado_tcc.csv # Dataset principal com 11 variáveis econômicas prontas para análise
+    │   ├── dados_precos_e_depeg.csv    # Série temática: ETH, stETH, razão e métrica de Depeg
+    │   ├── dados_staking_e_apr.csv     # Série temática: Total em Staking, APR ETH.STORE e Recompensas
+    │   ├── DICIONARIO_DE_DADOS.md      # Dicionário com nomes, fórmulas e unidades de cada variável
+    │   └── tecnico_auditoria/          # Dados brutos com 36 colunas técnicas e metadados de auditoria
+    │       ├── dataset_completo_com_metadados.csv
+    │       ├── auditoria_tcc.json
+    │       └── execucao.json
     │
-    ├── Dados/                     # Datasets brutos em formato CSV (2020 - 2026)
-    │   ├── depeg_steth_eth.csv
-    │   ├── preco_eth_usd.csv
-    │   ├── apr_lido_historico.csv
-    │   ├── apr_staking_direto_eth.csv
-    │   ├── tvl_lido.csv
-    │   ├── staking_ratio_eth.csv
-    │   ├── market_share_lsd.csv
-    │   └── market_share_lsd_snapshot.csv
+    ├── Graficos/                 # Figuras em alta resolução geradas pela pipeline
+    │   ├── mercado_steth.png     # Série histórica de Preços (ETH/stETH) e Depeg (%)
+    │   └── staking_apr_rede.png  # Série de Saldo em Staking e Rendimento ETH.STORE
     │
-    ├── Metricas/                  # Tabelas estatísticas, JSON e Relatório Markdown
-    │   ├── relatorio_metricas_tcc.md
-    │   ├── resumo_metricas.json
-    │   ├── tabela_depeg_descritiva.csv
-    │   ├── tabela_pre_pos_shanghai.csv
-    │   ├── tabela_eventos_estresse.csv
-    │   └── tabela_rendimento_apr.csv
+    ├── Metricas/                 # Relatórios estatísticos e tabelas econométricas
+    │   ├── relatorio_metricas_atualizado.md # Relatório formatado com testes Pré vs Pós-Shanghai
+    │   └── resumo_metricas_atualizado.json  # Resumo em JSON para gráficos e tabelas
     │
-    └── Graficos/                  # 8 Figuras em alta resolução (300 DPI) para a monografia
-        ├── fig01_depeg_historico_steth.png
-        ├── fig02_depeg_pre_pos_shanghai.png
-        ├── fig03_histograma_distribuicao_depeg.png
-        ├── fig04_rendimento_apr_lido_vs_solo.png
-        ├── fig05_evolucao_tvl_lido_vs_preco_eth.png
-        ├── fig06_market_share_historico_lsd.png
-        ├── fig07_dispersao_market_share_vs_depeg.png
-        └── fig08_indice_hhi_concentracao.png
+    └── scripts/                  # Scripts em Python organizados
+        ├── 01_coleta_precos.py
+        ├── 02_coleta_rated_network.py
+        ├── 02a_coleta_staking_rewards.py
+        ├── 03_coleta_defillama_curve.py
+        ├── 04_consolidar_dataset.py
+        ├── 05_gerar_graficos_tcc.py
+        ├── executar_pipeline.py
+        └── organizar_dados_intuitivos.py
 ```
 
 ---
 
-## 📖 Tutorial Passo a Passo: Como Rodar no Seu Ambiente Virtual (`venv`)
+## 📊 Principais Variáveis (`DADOS_DO_TCC/dataset_consolidado_tcc.csv`)
 
-Este é o método tradicional para executar o projeto no seu computador utilizando o ambiente virtual Python (`venv`) e o gerenciador `pip`.
-
-### 💻 1. No Windows (PowerShell)
-
-1. **Abra o PowerShell** na pasta do projeto e crie o ambiente virtual:
-   ```powershell
-   python -m venv .venv
-   ```
-
-2. **Ative o ambiente virtual:**
-   ```powershell
-   .\.venv\Scripts\Activate.ps1
-   ```
-   *(Caso apareça aviso de permissão de execução de scripts, rode antes: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
-
-3. **Instale as dependências:**
-   ```powershell
-   pip install -r requirements.txt
-   ```
-
-4. **Execute a pipeline completa (Coleta + Métricas + Gráficos 300 DPI):**
-   ```powershell
-   python scripts_e_dados/scripts/coletar_todos.py
-   ```
+| Coluna | Unidade | Descrição |
+| :--- | :--- | :--- |
+| `data` | AAAA-MM-DD | Data civil UTC (01/05/2022 a 31/05/2026 — 1.492 observações) |
+| `total_eth_staked` | ETH | Saldo efetivo em staking na rede (Beaconcha.in) |
+| `apr_rede_ethstore_pct` | % a.a. | Rendimento da rede Ethereum (ETH.STORE) em janelas de 24h |
+| `preco_eth_usd` | USD ($) | Preço diário de fechamento do ETH (Yahoo Finance) |
+| `preco_steth_usd` | USD ($) | Preço diário de fechamento do stETH (Yahoo Finance) |
+| `razao_steth_eth` | Ratio | Razão de preço $\frac{\text{stETH}}{\text{ETH}}$ (paridade teórica = 1.000000) |
+| `depeg_pct` | % | Desvio percentual: $(\frac{\text{stETH}}{\text{ETH}} - 1) \times 100$ |
+| `retorno_log_eth / steth` | Decimal | Retornos logarítmicos diários $\ln(P_t / P_{t-1})$ |
+| `volatilidade_anual_..._30d` | % a.a. | Volatilidade móvel anualizada (janela de 30 dias) |
 
 ---
 
-### 🐧 / 🍎 2. No Linux ou macOS (Terminal)
+## 🚀 Como Executar
 
-1. **Abra o Terminal** na pasta do projeto e crie o ambiente virtual:
-   ```bash
-   python3 -m venv .venv
-   ```
-
-2. **Ative o ambiente virtual:**
-   ```bash
-   source .venv/bin/activate
-   ```
-
-3. **Instale as dependências:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Execute a pipeline completa:**
-   ```bash
-   python scripts_e_dados/scripts/coletar_todos.py
-   ```
-
----
-
-## ⚡ Outras Formas de Execução
-
-### Opção B: Executar no Google Colab (Na Nuvem, Sem Instalar Nada)
-Clique no botão abaixo para rodar o notebook interativo na nuvem do Google Colab com 1 clique:
-
-👉 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maths0007/TCC_DEFI/blob/master/notebook_tcc_lido_defi.ipynb)
-
----
-
-### Opção C: Executar com `uv` (Execução Direta sem venv Manual)
-Se preferir usar o gerenciador `uv`:
-```bash
-uv run scripts_e_dados/scripts/coletar_todos.py
+### 1. Testar Integridade da Pipeline
+```powershell
+python testar_pipeline.py
 ```
 
----
+### 2. Executar a Pipeline Completa
+```powershell
+python executar_pipeline.py --somente-beaconchain --offline
+```
 
-## ⚙️ Executando Scripts Individuais no Ambiente Virtual
-
-Com o ambiente virtual ativado (`.venv`), você também pode executar cada script isoladamente:
-
-```bash
-# 1. Coletar preços de ETH/USD e razões stETH/ETH (Depeg)
-python scripts_e_dados/scripts/01_coleta_precos.py
-
-# 2. Coletar histórico de APR/APY do Lido e Solo Staking
-python scripts_e_dados/scripts/02_coleta_apr.py
-
-# 3. Coletar TVL, Staking Ratio e Market Share dos LSDs/LRTs
-python scripts_e_dados/scripts/03_coleta_tvl_lsd.py
-
-# 4. Calcular estatísticas descritivas, testes t/F e HHI
-python scripts_e_dados/scripts/04_gerar_metricas.py
-
-# 5. Gerar os 8 gráficos acadêmicos em alta resolução (300 DPI)
-python scripts_e_dados/scripts/05_gerar_graficos.py
+### 3. Reorganizar os Dados Intuitivos e Recalcular Métricas
+```powershell
+python scripts_e_dados/scripts/organizar_dados_intuitivos.py
 ```
