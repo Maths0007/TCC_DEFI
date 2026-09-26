@@ -16,5 +16,5 @@
   "periodo_de_rendimento": "24 horas iniciadas às 12:00:23 UTC; a data do CSV é a data de início.",
   "tratamento": "Extração, filtro por data de início e ordenação. Valores publicados mantidos sem interpolação ou preenchimento.",
   "limitacao": "Conferência de fidelidade ao HTML recebido e consistência interna da fórmula; não é auditoria on-chain independente.",
-  "processado_em_utc": "2026-09-26T02:15:36.370696+00:00"
+  "processado_em_utc": "2026-09-26T02:48:07.115121+00:00"
 }

@@ -5,8 +5,10 @@ from pathlib import Path
 import pandas as pd
 import comum_tcc as c
 
+SCRIPTS_DIR = Path(__file__).resolve().parent
+
 def modulo(nome):
-    spec = importlib.util.spec_from_file_location('m_'+nome, c.ROOT_DIR/(nome+'.py'))
+    spec = importlib.util.spec_from_file_location('m_'+nome, SCRIPTS_DIR / (nome + '.py'))
     m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
 class Testes(unittest.TestCase):
